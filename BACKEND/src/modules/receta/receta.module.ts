@@ -7,11 +7,10 @@ import { Categoria } from '../categoria/entities/categoria.entity';
 import { Pais } from '../pais/entities/pais.entity';
 import { In } from 'typeorm';
 import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
-import { RecetaIngrediente } from '../receta-ingrediente/entities/receta-ingrediente.entity';
 
 @Module({
   controllers: [RecetaController],
   providers: [RecetaService],
-  imports: [TypeOrmModule.forFeature([Receta, Categoria, Pais, Ingrediente, RecetaIngrediente])],
+  imports: [TypeOrmModule.forFeature([Receta, Categoria, Pais, Ingrediente])],
 })
 export class RecetaModule {}

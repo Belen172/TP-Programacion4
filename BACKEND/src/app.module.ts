@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { RecetaModule } from './modules/receta/receta.module';
-import { RecetaIngredienteModule} from './modules/receta-ingrediente/receta-ingrediente.module';
 import { IngredienteModule } from './modules/ingrediente/ingrediente.module';
 import { PaisModule } from './modules/pais/pais.module';
 import { CategoriaModule } from './modules/categoria/categoria.module';
@@ -24,11 +23,9 @@ import { CategoriaModule } from './modules/categoria/categoria.module';
                           // ⚠️ SOLO en desarrollo, crea/actualiza tablas
     }),
     RecetaModule,
-    RecetaIngredienteModule,
     IngredienteModule,
     PaisModule,
     CategoriaModule
-    
   ],
   controllers: [AppController],
   providers: [AppService],

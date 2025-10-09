@@ -2,32 +2,50 @@ import { Injectable } from '@nestjs/common';
 import { CreateRecetaDto } from './dto/create-receta.dto';
 import { UpdateRecetaDto } from './dto/update-receta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Receta } from './entities/receta.entity';
+import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
 
 @Injectable()
 export class RecetaService {
 
-
   constructor(
     @InjectRepository(Receta)
     private readonly recetaRepository: Repository<Receta>,
-  ) { }
+ 
+    @InjectRepository(Ingrediente)
+    private readonly ingredienteRepository: Repository<Ingrediente>,
+  ) {}
 
-  create(createRecetaDto: CreateRecetaDto) {
-    const nuevaReceta = this.recetaRepository.create(
-      {
-        nombre: createRecetaDto.nombre,
-        pasos: createRecetaDto.pasos,
-        foto: createRecetaDto.foto,
-        categoria: { id_categoria: createRecetaDto.id_categoria } as any,
-        pais: { id_pais: createRecetaDto.id_pais } as any
-      }
-    );
+  async create(createRecetaDto: CreateRecetaDto) {
+    // Extraemos los campos del DTO
+    const { nombre, pasos, foto, id_categoria, id_pais, ingredientes } = createRecetaDto;
+
+    // 1️⃣ Creamos la receta base
+    const nuevaReceta = this.recetaRepository.create({
+      nombre,
+      pasos,
+      foto,
+      categoria: { id_categoria } as any,
+      pais: { id_pais } as any,
+    });
+
+    // 2️⃣ Si vienen ingredientes, los buscamos en la base de datos
+    if (ingredientes && ingredientes.length > 0) {
+      const ingredientesEncontrados = await this.ingredienteRepository.findBy({
+        id_ingrediente: In(ingredientes),
+      });
+      nuevaReceta.ingredientes = ingredientesEncontrados;
+    }
+
+    // 3️⃣ Guardamos la receta junto con sus relaciones
     return this.recetaRepository.save(nuevaReceta);
+
   }
 
   findAll(): Promise<Receta[]> {
-    return this.recetaRepository.find({ relations: ['pais', 'categoria'] });
+    return this.recetaRepository.find({
+      relations: ['pais', 'categoria', 'ingredientes'],
+    });
   }
 }

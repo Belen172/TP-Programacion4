@@ -17,4 +17,8 @@ export class CreateRecetaDto {
 
   @IsInt()
   id_pais: number;
+
+  @IsArray()
+  @IsInt({ each: true })
+  ingredientes: number[];
 }
