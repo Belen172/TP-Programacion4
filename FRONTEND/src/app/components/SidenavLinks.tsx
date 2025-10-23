@@ -1,9 +1,9 @@
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import * as React from "react";
 import { NavLink, useLocation } from "react-router";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
@@ -47,7 +47,7 @@ export default function SidenavLinks(props: SidenavLinksProps) {
         <>
             <SidenavLink to="/" icon={<DashboardOutlinedIcon />} label="Dashboard" onClick={props.handleClick} />
             <SidenavLink to="/products" icon={<Inventory2OutlinedIcon />} label="ProductosPage" onClick={props.handleClick} />
-            <SidenavLink to="/orders" icon={<ShoppingCartOutlinedIcon />} label="Ordenes" onClick={props.handleClick} />
+            <SidenavLink to="/comentarios" icon={<CommentOutlinedIcon />} label="Comentarios" onClick={props.handleClick} />
             <SidenavLink to="/users" icon={<PeopleAltOutlinedIcon />} label="Usuarios" onClick={props.handleClick} />
             <SidenavLink to="/reports" icon={<BarChartOutlinedIcon />} label="Reportes" onClick={props.handleClick} />
             <SidenavLink to="/settings" icon={<SettingsOutlinedIcon />} label="Configuración" onClick={props.handleClick} />
