@@ -2,26 +2,26 @@ import { useState } from "react"
 import type { FormEvent, ChangeEvent } from "react"
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import type { ProductoCrearDto } from "./../types/ProductoTypes" 
-import { ProductosService } from "./../services/ProductosService"
+import type { RecetaCrearDto } from "../types/RecetaTypes" 
+import { RecetaService } from "../services/RecetaService"
 
-const estadoInicial: ProductoCrearDto = {
-    titulo: "",
-    descripcion: "",
-    slug: "",
-    precio: 0,
-    stock: 0
+const estadoInicial: RecetaCrearDto = {
+    nombre: "",
+    pasos: [],
+    id_categoria: 0,
+    id_pais: 0,
+    ingredientes: []
 }
 
-export default function ProductosCrearPage() {
-    const [form, setForm] = useState<ProductoCrearDto>(estadoInicial)
+export default function RecetaCrearPage() {
+    const [form, setForm] = useState<RecetaCrearDto>(estadoInicial)
     const [cargando, setCargando] = useState<boolean>(false)
 
     async function handleOnSubmit (event: FormEvent) {
         event.preventDefault();
         try {
             setCargando(true)
-            const result = await ProductosService.crearProducto(form)
+            const result = await RecetaService.crearReceta(form)
             reiniciarForm()
         } catch (e) {
             console.error(e)
@@ -33,7 +33,7 @@ export default function ProductosCrearPage() {
         const { name, value } = event.target;
         setForm(prevFormData => ({
             ...prevFormData,
-            [name]: name === "stock" || name === "precio" ? Number(value) : value
+            [name]: name === "nombre"  ? Number(value) : value            
         }));
     }
     function handleClickReiniciar () {
@@ -52,40 +52,40 @@ export default function ProductosCrearPage() {
                 <div>
                     <TextField
                     required
-                    value={form.titulo}
-                    name="titulo"
+                    value={form.nombre}
+                    name="nombre"
                     onChange={handleOnChange}
-                    label="Título"/>
+                    label="Nombre"/>
 
 
                     <TextField
-                    value={form.descripcion}
-                    name="descripcion"
+                    value={form.ingredientes.join(", ")}
+                    name="ingredientes"
                     onChange={handleOnChange}
-                    label="Descripción"/>
-
-                    <TextField
-                    required
-                    value={form.slug}
-                    name="slug"
-                    onChange={handleOnChange}
-                    label="slug"/>
+                    label="Ingredientes"/>
 
                     <TextField
                     required
-                    value={form.precio}
+                    value={form.pasos.join("\n")}
+                    name="pasos"
+                    onChange={handleOnChange}
+                    label="Pasos"/>
+
+                    <TextField
+                    required
+                    value={form.id_categoria}
                     type="number"
-                    name="precio"
+                    name="id_categoria"
                     onChange={handleOnChange}
-                    label="precio"/>
+                    label="Pertenece a la Categoría"/>
 
                     <TextField
                     required
-                    value={form.stock}
+                    value={form.id_pais}
                     type="number"
-                    name="stock"
+                    name="id_pais"
                     onChange={handleOnChange}
-                    label="stock"/>
+                    label="Pertenece al País"/>
 
                     <div>
                         <Button variant="contained" type="submit">Enviar</Button>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import { ProductosService } from './../services/ProductosService'
-import type { Producto } from "./../types/ProductoTypes"
+import { ProductosService } from '../services/RecetaService'
+import type { Producto } from "../types/RecetaTypes"
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
