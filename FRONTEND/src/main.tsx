@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { StrictMode } from "react";
 import { createRoot } from 'react-dom/client'
-import { router } from './app/routes.ts'
+import { router } from './app/routes.tsx'
 import { RouterProvider } from "react-router/dom";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 

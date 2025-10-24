@@ -1,99 +1,135 @@
 import { useState } from "react"
 import type { FormEvent, ChangeEvent } from "react"
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import type { RecetaCrearDto } from "../types/RecetaTypes" 
 import { RecetaService } from "../services/RecetaService"
+import type { RecetaCrearDto } from "../types/RecetaTypes"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
 
 const estadoInicial: RecetaCrearDto = {
-    nombre: "",
-    pasos: [],
-    id_categoria: 0,
-    id_pais: 0,
-    ingredientes: []
+  nombre: "",
+  pasos: [],
+  foto: "",
+  id_categoria: 0,
+  id_pais: 0,
+  ingredientes: [],
 }
 
 export default function RecetaCrearPage() {
-    const [form, setForm] = useState<RecetaCrearDto>(estadoInicial)
-    const [cargando, setCargando] = useState<boolean>(false)
+  const [form, setForm] = useState<RecetaCrearDto>(estadoInicial)
+  const [cargando, setCargando] = useState(false)
 
-    async function handleOnSubmit (event: FormEvent) {
-        event.preventDefault();
-        try {
-            setCargando(true)
-            const result = await RecetaService.crearReceta(form)
-            reiniciarForm()
-        } catch (e) {
-            console.error(e)
-        } finally {
-            setCargando(false)
-        }
+  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target
+    setForm(prev => ({
+      ...prev,
+      [name]:
+        name === "id_categoria" || name === "id_pais"
+          ? Number(value)
+          : name === "ingredientes"
+          ? value.split(",").map(Number)
+          : name === "pasos"
+          ? value.split("\n") // cada línea es un paso
+          : value,
+    }))
+  }
+
+  async function handleOnSubmit(e: FormEvent) {
+    e.preventDefault()
+    try {
+      setCargando(true)
+      await RecetaService.crearReceta(form)
+      alert("Receta creada correctamente")
+      reiniciarForm()
+    } catch (error) {
+      console.error("Error al crear receta", error)
+    } finally {
+      setCargando(false)
     }
-    function handleOnChange (event: ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setForm(prevFormData => ({
-            ...prevFormData,
-            [name]: name === "nombre"  ? Number(value) : value            
-        }));
-    }
-    function handleClickReiniciar () {
-        reiniciarForm()
-    }
-    function reiniciarForm () {
-        setForm(estadoInicial)
-    }
-    return (
-        <div>
-            <div>
-                <h1>Formulario para crear Producto</h1>
-            </div>
+  }
 
-            <form autoComplete="off" noValidate onSubmit={handleOnSubmit}>
-                <div>
-                    <TextField
-                    required
-                    value={form.nombre}
-                    name="nombre"
-                    onChange={handleOnChange}
-                    label="Nombre"/>
+  function reiniciarForm() {
+    setForm(estadoInicial)
+  }
 
+  return (
+    <div>
+      <h1>Crear Receta</h1>
+      <form autoComplete="off" noValidate onSubmit={handleOnSubmit}>
+        <TextField
+          required
+          name="nombre"
+          label="Nombre"
+          value={form.nombre}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
-                    <TextField
-                    value={form.ingredientes.join(", ")}
-                    name="ingredientes"
-                    onChange={handleOnChange}
-                    label="Ingredientes"/>
+        <TextField
+          name="foto"
+          label="Foto (URL)"
+          value={form.foto || ""}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
-                    <TextField
-                    required
-                    value={form.pasos.join("\n")}
-                    name="pasos"
-                    onChange={handleOnChange}
-                    label="Pasos"/>
+        <TextField
+          name="pasos"
+          label="Pasos (uno por línea)"
+          multiline
+          rows={4}
+          value={form.pasos.join("\n")}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
-                    <TextField
-                    required
-                    value={form.id_categoria}
-                    type="number"
-                    name="id_categoria"
-                    onChange={handleOnChange}
-                    label="Pertenece a la Categoría"/>
+        <TextField
+          required
+          type="number"
+          name="id_categoria"
+          label="ID Categoría"
+          value={form.id_categoria}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
-                    <TextField
-                    required
-                    value={form.id_pais}
-                    type="number"
-                    name="id_pais"
-                    onChange={handleOnChange}
-                    label="Pertenece al País"/>
+        <TextField
+          required
+          type="number"
+          name="id_pais"
+          label="ID País"
+          value={form.id_pais}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
-                    <div>
-                        <Button variant="contained" type="submit">Enviar</Button>
-                        <Button variant="outlined" onClick={handleClickReiniciar}>Reiniciar</Button>
-                    </div>
-                </div>
-            </form>
+        <TextField
+          name="ingredientes"
+          label="Ingredientes (IDs separados por coma)"
+          value={form.ingredientes.join(", ")}
+          onChange={handleOnChange}
+          fullWidth
+          margin="normal"
+        />
 
+        <div style={{ marginTop: 20 }}>
+          <Button variant="contained" type="submit" disabled={cargando}>
+            Crear
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={reiniciarForm}
+            disabled={cargando}
+            style={{ marginLeft: 10 }}
+          >
+            Reiniciar
+          </Button>
         </div>
-    )
+      </form>
+    </div>
+  )
 }

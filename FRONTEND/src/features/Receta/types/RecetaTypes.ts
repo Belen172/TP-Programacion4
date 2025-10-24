@@ -1,30 +1,30 @@
-export interface RecetaCrearDto {
-    nombre: string
-    pasos: string[]
-    foto?: string
-    id_categoria: number
-    id_pais: number
-    ingredientes: number[]
-}
-
-export interface RecetaCrearForm {
-    titulo: string
-    precio: string
-    descripcion: string
-    slug: string
-    stock: string
-}
-
-export interface RecetaActualizarDto {
-    nombre: string
-    precio: number
-}
-
+// Tipo principal que representa una receta completa
 export interface Receta {
-    id: number
-    titulo: string
-    precio: number
-    descripcion: string
-    slug: string
-    stock: number
+  id_receta: number;
+  nombre: string;
+  pasos: string[];           // lista de pasos o instrucciones
+  foto?: string;             // opcional
+  id_categoria: number;
+  id_pais: number;
+  ingredientes: number[];    // lista de ID de ingredientes
+}
+
+// Datos necesarios para crear una receta
+export interface RecetaCrearDto {
+  nombre: string
+  pasos: string[]
+  foto?: string
+  id_categoria: number
+  id_pais: number
+  ingredientes: number[]
+}
+
+// Datos necesarios para actualizar una receta existente
+export interface RecetaActualizarDto {
+  nombre?: string
+  pasos?: string[]
+  foto?: string
+  id_categoria?: number
+  id_pais?: number
+  ingredientes?: number[]
 }
