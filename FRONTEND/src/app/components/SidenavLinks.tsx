@@ -49,7 +49,7 @@ export default function SidenavLinks(props: SidenavLinksProps) {
 
       {/* Nuevo enlace para Recetas */}
       <SidenavLink to="/recetas" icon={<Inventory2OutlinedIcon />} label="Recetas" onClick={props.handleClick} />
-
+      <SidenavLink to="/categorias" icon={<Inventory2OutlinedIcon />} label="Categorías" onClick={props.handleClick} />
       <SidenavLink to="/comentarios" icon={<CommentOutlinedIcon />} label="Comentarios" onClick={props.handleClick} />
       <SidenavLink to="/users" icon={<PeopleAltOutlinedIcon />} label="Usuarios" onClick={props.handleClick} />
       <SidenavLink to="/reports" icon={<BarChartOutlinedIcon />} label="Reportes" onClick={props.handleClick} />

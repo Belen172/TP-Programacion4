@@ -1,12 +1,17 @@
 import { createBrowserRouter } from "react-router";
 import AppLayout from "./layouts/AppLayout.tsx";
 import DashboardPage from "../features/Dashboard/views/DashboardPage.tsx";
-import ComentariosPage from "../features/Comentarios/views/ComentariosPage.tsx";
 // 🟩 Páginas de Recetas
-import RecetasPage from "src/features/Receta/views/RecetaPage.tsx";
-import RecetasCrearPage from "src/features/Receta/views/RecetaCrearPage.tsx";
-import RecetasEditarPage from "src/features/Receta/views/RecetaEditarPage.tsx";
-import RecetasEliminarPage from "src/features/Receta/views/RecetaEliminarPage.tsx";
+import RecetaPage from "../features/Receta/views/RecetaPage.tsx";
+import RecetaCrearPage from "../features/Receta/views/RecetaCrearPage.tsx";
+import RecetaEditarPage from "../features/Receta/views/RecetaEditarPage.tsx";
+import RecetaEliminarPage from "../features/Receta/views/RecetaEliminarPage.tsx";
+// 🟩 Páginas de Categorías
+import CategoriaPage from "../features/Categoria/views/CategoriaPage.tsx"
+import CategoriaCrearPage from "../features/Categoria/views/CategoriaCrearPage.tsx"
+import CategoriaEditarPage from "../features/Categoria/views/CategoriaEditarPage.tsx"
+import CategoriaEliminarPage from "../features/Categoria/views/CategoriaEliminarPage.tsx"
+
 
 export const router = createBrowserRouter([
   {
@@ -14,23 +19,17 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       // RUTA PRINCIPAL DEL MÓDULO RECETAS
-      {
-        path: "recetas",
-        element: <RecetasPage />,
-      },
+      { path: "recetas", element: <RecetaPage /> },
       // SUBRUTAS
-      {
-        path: "recetas/crear",
-        element: <RecetasCrearPage />,
-      },
-      {
-        path: "recetas/editar",
-        element: <RecetasEditarPage />,
-      },
-      {
-        path: "recetas/eliminar",
-        element: <RecetasEliminarPage />,
-      },
+      { path: "recetas/crear", element: <RecetaCrearPage /> },
+      { path: "recetas/editar", element: <RecetaEditarPage /> },
+      { path: "recetas/eliminar", element: <RecetaEliminarPage /> },
+
+      // RUTAS DE CATEGORÍAS
+      { path: "categorias", element: <CategoriaPage /> },
+      { path: "categorias/crear", element: <CategoriaCrearPage /> },
+      { path: "categorias/editar", element: <CategoriaEditarPage /> },
+      { path: "categorias/eliminar", element: <CategoriaEliminarPage /> },
     ],
   },
 ]);

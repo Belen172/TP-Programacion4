@@ -18,7 +18,7 @@ export default function RecetaEliminarPage() {
     try {
       setCargando(true)
       await RecetaService.eliminarReceta(id)
-      alert("Receta eliminada correctamente 🗑️")
+      alert("Receta eliminada correctamente")
       setId(0)
     } catch (e) {
       console.error("Error al eliminar receta", e)
