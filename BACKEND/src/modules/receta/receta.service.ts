@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRecetaDto } from './dto/create-receta.dto';
 import { UpdateRecetaDto } from './dto/update-receta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -48,4 +48,28 @@ export class RecetaService {
       relations: ['pais', 'categoria', 'ingredientes'],
     });
   }
+
+  async update(id_receta: number, updateRecetaDTO: UpdateRecetaDto): Promise<Receta> {
+
+    const recetaExistente = await this.recetaRepository.findOne({where: {id_receta}});
+    
+    if(!recetaExistente){
+      throw new NotFoundException("Receta no encontrada");
+    }
+
+  let ingredientes;
+  if (updateRecetaDTO.ingredientes) {
+    ingredientes = updateRecetaDTO.ingredientes.map(id => ({ id_ingrediente: id }));
+  }
+
+  const updated = this.recetaRepository.merge(recetaExistente, {
+    ...updateRecetaDTO,
+    ...(ingredientes && { ingredientes }),
+  });
+
+  return await this.recetaRepository.save(updated);
+
+  }
+
+
 }

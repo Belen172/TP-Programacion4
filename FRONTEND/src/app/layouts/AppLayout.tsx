@@ -62,7 +62,7 @@ export default function AppLayout() {
                     )}
 
                     <Typography variant="h6" noWrap component="div">
-                        Internal Admin
+                        Recetas
                     </Typography>
 
                     <Box sx={{ flex: 1 }} />

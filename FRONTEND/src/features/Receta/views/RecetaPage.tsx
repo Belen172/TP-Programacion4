@@ -16,8 +16,8 @@ export default function RecetasPage() {
   const [colDefs] = useState<ColDef[]>([
     { field: "id_receta", headerName: 'ID Receta' },
     { field: "nombre", headerName: "Nombre" },
-    { field: "id_categoria", headerName: "Categoría" },
-    { field: "id_pais", headerName: "País" },
+    { field: "categoria.nombre", headerName: "Categoría" },
+    { field: "pais.nombre", headerName: "País" },
     { field: "ingredientes", headerName: "Ingredientes" }
   ])
 

@@ -22,10 +22,10 @@ export class RecetaController {
   //   return this.recetaService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateRecetaDto: UpdateRecetaDto) {
-  //   return this.recetaService.update(+id, updateRecetaDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: number, @Body() updateRecetaDto: UpdateRecetaDto) {
+  return this.recetaService.update(+id, updateRecetaDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

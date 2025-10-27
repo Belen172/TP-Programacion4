@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Receta } from './entities/receta.entity';
 import { Categoria } from '../categoria/entities/categoria.entity';
 import { Pais } from '../pais/entities/pais.entity';
-import { In } from 'typeorm';
 import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
 
 @Module({
