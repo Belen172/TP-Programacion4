@@ -1,59 +1,105 @@
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
-import * as React from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import React from "react";
+import {
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Collapse,
+  Divider,
+} from "@mui/material";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PublicIcon from "@mui/icons-material/Public";
+import CategoryIcon from "@mui/icons-material/Category";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Link as RouterLink } from "react-router-dom";
 
-const SidenavLink = ({
-  to,
-  icon,
-  label,
-  onClick,
-}: {
-  to: string;
-  icon: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-}) => {
-  const location = useLocation();
-  const selected = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
-  return (
-    <ListItemButton
-      component={NavLink}
-      to={to}
-      onClick={onClick}
-      selected={selected}
-      sx={{ borderRadius: 1, mb: 0.5 }}
-    >
-      <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>
-      <ListItemText primary={label} />
-    </ListItemButton>
-  );
-};
-
-interface SidenavLinksProps {
-  handleClick: () => void;
+interface Props {
+  handleClick?: () => void;
 }
 
-/*
-*  Links que se muestran en el sidebar.
-*/
-export default function SidenavLinks(props: SidenavLinksProps) {
+export default function SidenavLinks({ handleClick }: Props) {
+  const [openAdmin, setOpenAdmin] = React.useState(true);
+
+  const handleToggleAdmin = () => setOpenAdmin((prev) => !prev);
+
   return (
     <>
-      <SidenavLink to="/" icon={<DashboardOutlinedIcon />} label="Dashboard" onClick={props.handleClick} />
+      <List>
+        <ListItemButton
+          component={RouterLink}
+          to="/recetas"
+          onClick={handleClick}
+        >
+          <ListItemIcon>
+            <RestaurantMenuIcon />
+          </ListItemIcon>
+          <ListItemText primary="Ver Recetas" />
+        </ListItemButton>
+      </List>
 
-      {/* Nuevo enlace para Recetas */}
-      <SidenavLink to="/recetas" icon={<Inventory2OutlinedIcon />} label="Recetas" onClick={props.handleClick} />
-      <SidenavLink to="/categorias" icon={<Inventory2OutlinedIcon />} label="Categorías" onClick={props.handleClick} />
-      <SidenavLink to="/comentarios" icon={<CommentOutlinedIcon />} label="Comentarios" onClick={props.handleClick} />
-      <SidenavLink to="/users" icon={<PeopleAltOutlinedIcon />} label="Usuarios" onClick={props.handleClick} />
-      <SidenavLink to="/reports" icon={<BarChartOutlinedIcon />} label="Reportes" onClick={props.handleClick} />
-      <SidenavLink to="/settings" icon={<SettingsOutlinedIcon />} label="Configuración" onClick={props.handleClick} />
+      <Divider sx={{ my: 1 }} />
+
+      <List>
+        <ListItemButton onClick={handleToggleAdmin}>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Administración" />
+          {openAdmin ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+
+        <Collapse in={openAdmin} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding sx={{ pl: 4 }}>
+            <ListItemButton
+              component={RouterLink}
+              to="/admin/recetas"
+              onClick={handleClick}
+            >
+              <ListItemIcon>
+                <RestaurantMenuIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Recetas" />
+            </ListItemButton>
+
+            <ListItemButton
+              component={RouterLink}
+              to="/admin/paises"
+              onClick={handleClick}
+            >
+              <ListItemIcon>
+                <PublicIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Países" />
+            </ListItemButton>
+
+            <ListItemButton
+              component={RouterLink}
+              to="/admin/categorias"
+              onClick={handleClick}
+            >
+              <ListItemIcon>
+                <CategoryIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Categorías" />
+            </ListItemButton>
+
+            <ListItemButton
+              component={RouterLink}
+              to="/admin/ingredientes"
+              onClick={handleClick}
+            >
+              <ListItemIcon>
+                <LocalDiningIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Ingredientes" />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
     </>
   );
 }
