@@ -3,6 +3,7 @@ import {
     AppBar, Avatar, Box, Divider, Drawer, IconButton, List, Menu, MenuItem, Toolbar, Typography, useMediaQuery
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
+import Breadcrumbs from "../components/Breadcrumbs";
 import { Outlet } from "react-router";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -114,6 +115,7 @@ export default function AppLayout() {
                 <Box sx={{ mb: 2 }}>
                     {/*<RouterBreadcrumbs />*/}
                 </Box>
+                <Breadcrumbs />
                 <Outlet />
             </Main>
         </Box>

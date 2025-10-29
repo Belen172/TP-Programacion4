@@ -14,6 +14,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import { Link as RouterLink } from "react-router-dom";
 
 interface Props {
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export default function SidenavLinks({ handleClick }: Props) {
-  const [openAdmin, setOpenAdmin] = React.useState(true);
+  const [openAdmin, setOpenAdmin] = React.useState(false);
 
   const handleToggleAdmin = () => setOpenAdmin((prev) => !prev);
 
@@ -92,7 +93,7 @@ export default function SidenavLinks({ handleClick }: Props) {
               onClick={handleClick}
             >
               <ListItemIcon>
-                <LocalDiningIcon fontSize="small" />
+                <SoupKitchenIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Ingredientes" />
             </ListItemButton>

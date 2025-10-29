@@ -19,7 +19,7 @@ import { CategoriaModule } from './modules/categoria/categoria.module';
       username: process.env.DB_USERNAME, // 👈 tu usuario MySQL
       password: process.env.DB_PASSWORD, // 👈 tu password MySQL
       autoLoadEntities: true, // detecta automáticamente tus entidades
-      synchronize: true, // sincroniza el esquema de la base de datos (solo en desarrollo) 
+      synchronize: false, // sincroniza el esquema de la base de datos (solo en desarrollo) 
                           // ⚠️ SOLO en desarrollo, crea/actualiza tablas
     }),
     RecetaModule,
