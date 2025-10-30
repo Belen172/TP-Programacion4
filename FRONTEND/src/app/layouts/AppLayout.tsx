@@ -63,7 +63,7 @@ export default function AppLayout() {
                     )}
 
                     <Typography variant="h6" noWrap component="div">
-                        Recetas
+                        RecetaApp
                     </Typography>
 
                     <Box sx={{ flex: 1 }} />
@@ -73,7 +73,7 @@ export default function AppLayout() {
                     </IconButton>
 
                     <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ ml: 0.5 }}>
-                        <Avatar sx={{ width: 32, height: 32 }}>LF</Avatar>
+                        <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
                     </IconButton>
 
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>

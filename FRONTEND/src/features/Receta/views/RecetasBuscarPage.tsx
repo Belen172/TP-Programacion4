@@ -42,7 +42,7 @@ export default function RecetasBuscarPage() {
 
       <Grid container spacing={2}>
         {recetasFiltradas.map((receta) => (
-          <Grid item xs={12} sm={6} md={4} key={receta.id_receta}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={receta.id_receta}>
             <Card
               sx={{
                 height: "100%",

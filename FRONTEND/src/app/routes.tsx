@@ -30,33 +30,32 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true, element: <InicioPage /> },
-      { path: "recetas", element: <RecetasBuscarPage /> },
-      { path: "admin", element: <AdminPage />, 
+      { path: "recetas", element: <RecetasBuscarPage />},
+      { path: "admin", element: <AdminPage />,
         children: [
           // RUTAS DE RECETAS
           { path: "recetas", element: <RecetaPage /> },
-          { path: "admin/recetas", element: <RecetaPage /> },
-          { path: "admin/recetas/crear", element: <RecetaCrearPage /> },
-          { path: "admin/recetas/editar", element: <RecetaEditarPage /> },
-          { path: "admin/recetas/eliminar", element: <RecetaEliminarPage /> },
+          { path: "recetas/crear", element: <RecetaCrearPage /> },
+          { path: "recetas/editar", element: <RecetaEditarPage /> },
+          { path: "recetas/eliminar", element: <RecetaEliminarPage /> },
 
           // RUTAS DE CATEGORÍAS
-          { path: "admin/categorias", element: <CategoriaPage /> },
-          { path: "admin/categorias/crear", element: <CategoriaCrearPage /> },
-          { path: "admin/categorias/editar", element: <CategoriaEditarPage /> },
-          { path: "admin/categorias/eliminar", element: <CategoriaEliminarPage /> },
+          { path: "categorias", element: <CategoriaPage /> },
+          { path: "categorias/crear", element: <CategoriaCrearPage /> },
+          { path: "categorias/editar", element: <CategoriaEditarPage /> },
+          { path: "categorias/eliminar", element: <CategoriaEliminarPage /> },
 
           // RUTAS DE PAÍSES
-          { path: "admin/paises", element: <PaisPage /> },
-          { path: "admin/paises/crear", element: <PaisCrearPage /> },
-          { path: "admin/paises/editar", element: <PaisEditarPage /> },
-          { path: "admin/paises/eliminar", element: <PaisEliminarPage /> },
+          { path: "paises", element: <PaisPage /> },
+          { path: "paises/crear", element: <PaisCrearPage /> },
+          { path: "paises/editar", element: <PaisEditarPage /> },
+          { path: "paises/eliminar", element: <PaisEliminarPage /> },
 
           // RUTAS DE INGREDIENTES
-          { path: "admin/ingredientes", element: <IngredientePage /> },
-          { path: "admin/ingredientes/crear", element: <IngredienteCrearPage /> },
-          { path: "admin/ingredientes/editar", element: <IngredienteEditarPage /> },
-          { path: "admin/ingredientes/eliminar", element: <IngredienteEliminarPage /> },
+          { path: "ingredientes", element: <IngredientePage /> },
+          { path: "ingredientes/crear", element: <IngredienteCrearPage /> },
+          { path: "ingredientes/editar", element: <IngredienteEditarPage /> },
+          { path: "ingredientes/eliminar", element: <IngredienteEliminarPage /> },
           
           // Mensaje si alguien ingresa una URL inexistente
           {
