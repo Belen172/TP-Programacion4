@@ -5,18 +5,25 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { Outlet } from "react-router";
+import { Link as RouterLink } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import SidenavLinks from '../components/SidenavLinks.tsx'
 
 const DRAWER_WIDTH = 280;
 
 const Main = styled("main")(({ theme }) => ({
-    flexGrow: 1,
+  flexGrow: 1,
+  padding: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
     padding: theme.spacing(3),
-    minHeight: "100dvh",
-    background: theme.palette.mode === "light" ? "#fafafa" : theme.palette.background.default,
+  },
+  minHeight: "100dvh",
+  background: theme.palette.mode === "light" ? "#fafafa" : theme.palette.background.default,
 }));
+
+
 
 export default function AppLayout() {
     const theme = useTheme();
@@ -25,7 +32,6 @@ export default function AppLayout() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleDrawerToggle = () => setMobileOpen((p) => !p);
-
     const handleClickSidenav = () => !mdUp ? handleDrawerToggle : undefined;
 
     const drawer = (
@@ -54,7 +60,14 @@ export default function AppLayout() {
     return (
         <Box sx={{ display: "flex" }}>
             {/* TOP BAR */}
-            <AppBar position="fixed" sx={{ zIndex: (t) => t.zIndex.drawer + 1, bgcolor: "background.paper", color: "text.primary" }}>
+            <AppBar
+                position="fixed"
+                sx={{
+                    zIndex: (t) => t.zIndex.drawer + 1,
+                    bgcolor: "background.paper",
+                    color: "text.primary",
+                }}
+            >
                 <Toolbar sx={{ gap: 1 }}>
                     {!mdUp && (
                         <IconButton edge="start" aria-label="open drawer" onClick={handleDrawerToggle}>
@@ -62,9 +75,37 @@ export default function AppLayout() {
                         </IconButton>
                     )}
 
-                    <Typography variant="h6" noWrap component="div">
+                    {/* Logo clickeable que redirige al inicio */}
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component={RouterLink}
+                        to="/"
+                        sx={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            fontWeight: 700,
+                            flexGrow: 0,
+                        }}
+                    >
                         RecetaApp
                     </Typography>
+
+                    {/* Ícono de administración */}
+                    <IconButton
+                        component={RouterLink}
+                        to="/admin"
+                        color="primary"
+                        sx={{
+                            ml: 1,
+                            display: { xs: "none", sm: "inline-flex" }, // 🔹 Se oculta en pantallas XS
+                            "&:hover": {
+                                backgroundColor: "rgba(25, 118, 210, 0.1)",
+                            },
+                        }}
+                    >
+                        <AdminPanelSettingsIcon />
+                    </IconButton>
 
                     <Box sx={{ flex: 1 }} />
 

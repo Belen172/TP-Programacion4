@@ -7,6 +7,15 @@ import { createRoot } from 'react-dom/client'
 import { router } from './app/routes.tsx'
 import { RouterProvider } from "react-router/dom";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+
+let theme = createTheme({
+  palette: { mode: "light" },
+});
+
+theme = responsiveFontSizes(theme);
+
+export default theme;
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);

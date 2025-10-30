@@ -18,7 +18,14 @@ export default function RecetasPage() {
     { field: "nombre", headerName: "Nombre" },
     { field: "categoria.nombre", headerName: "Categoría" },
     { field: "pais.nombre", headerName: "País" },
-    { field: "ingredientes", headerName: "Ingredientes" }
+    {field: "ingredientes",
+      headerName: "Ingredientes",
+      valueGetter: (params) =>
+        Array.isArray(params.data.ingredientes)
+          ? params.data.ingredientes.map((i: { nombre: string }) => i.nombre).join(", ")
+          : "-",
+    },
+
   ])
 
 
