@@ -9,12 +9,15 @@ import { AgGridReact } from 'ag-grid-react'
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import type { ColDef } from "ag-grid-community";
+import IconButton from "@mui/material/IconButton"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
 
 
 export default function RecetasPage() {
-  const [recetas, setRecetas] = useState<Receta[]>()
+  const [recetas, setRecetas] = useState<Receta[]>([])
   const [colDefs] = useState<ColDef[]>([
-    { field: "id_receta", headerName: 'ID Receta' },
+    { field: "id_receta", headerName: "ID", maxWidth: 80 },
     { field: "nombre", headerName: "Nombre" },
     { field: "categoria.nombre", headerName: "Categoría" },
     { field: "pais.nombre", headerName: "País" },
@@ -26,11 +29,55 @@ export default function RecetasPage() {
           : "-",
     },
 
+    {
+      headerName: "Acciones",
+      field: "acciones",
+      cellRenderer: (params: any) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "left",
+            gap: "0.5rem",
+            height: "100%",
+          }}
+        >
+          <IconButton
+            color="primary"
+            onClick={() => navigate(`/admin/recetas/editar?id=${params.data.id_receta}`)}
+            title="Editar receta"
+          >
+            <EditIcon fontSize="small"/>
+          </IconButton>
+          <IconButton
+            color="error"
+            onClick={() => handleEliminar(params.data.id_receta)}
+            title="Eliminar receta"
+          >
+            <DeleteIcon fontSize="small"/>
+          </IconButton>
+        </div>
+      ),
+      width: 120,
+      cellStyle: { textAlign: "center" },
+    },
   ])
 
 
-  const rowSelection: "single" | "multiple" = "single"; // o "multiple" si querés seleccionar varias filas
+  const navigate = useNavigate()
 
+  async function handleEliminar(id: number) {
+    if (confirm("¿Seguro que querés eliminar esta receta?")) {
+      try {
+        await RecetaService.eliminarReceta(id)
+        alert("Receta eliminada correctamente")
+        setRecetas((prev) => prev.filter((r) => r.id_receta !== id))
+      } catch (error) {
+        console.error("Error al eliminar receta:", error)
+        alert("Ocurrió un error al eliminar la receta")
+      }
+    }
+  }
 
   useEffect(() => {
     async function fetchRecetas() {
@@ -40,36 +87,35 @@ export default function RecetasPage() {
     fetchRecetas()
   }, [])
 
-  const navigate = useNavigate()
-  function handleButtonNavClickCrear() {
-    navigate("crear")
-  }
-  function handleButtonNavClickEditar() {
-    navigate("editar")
-  }
-  function handleButtonNavClickEliminar() {
-    navigate("eliminar")
-  }
+  const rowSelection: "single" | "multiple" = "single"
+
+  const gridStyle = {
+    height: "auto",
+    width: "100%",
+    "--ag-row-height": "45px",
+    "--ag-header-height": "40px",
+  };
 
   return (
     <>
-      <div>
-        <Box sx={{ width: '100%' }}>
-          <ButtonGroup variant="outlined">
-            <Button onClick={handleButtonNavClickCrear}>Crear</Button>
-            <Button onClick={handleButtonNavClickEditar}>Editar</Button>
-            <Button onClick={handleButtonNavClickEliminar}>Eliminar</Button>
-          </ButtonGroup>
-        </Box>
-      </div>
+      <Box sx={{ width: "100%", mb: 2 }}>
+        <ButtonGroup variant="outlined">
+          <button onClick={() => navigate("crear")}>Crear</button>
+        </ButtonGroup>
+      </Box>
+
       <h2>Recetas</h2>
-      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>    
-        <AgGridReact<any>   // 👈 agregá <any> o <Receta> si querés tipado
+
+      <div className="ag-theme-alpine" style={gridStyle}>
+        <AgGridReact
           rowData={recetas}
           columnDefs={colDefs}
-          rowSelection={rowSelection}
+          rowSelection="single"
+          domLayout="autoHeight"
+          onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>
+
     </>
   )
 }

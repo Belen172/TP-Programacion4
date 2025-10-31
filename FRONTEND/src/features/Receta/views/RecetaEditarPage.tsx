@@ -1,120 +1,148 @@
-import { useState } from "react"
-import type { FormEvent, ChangeEvent } from "react"
-import { RecetaService } from "../services/RecetaService"
-import type { RecetaActualizarDto } from "../types/RecetaTypes"
-import TextField from "@mui/material/TextField"
-import Button from "@mui/material/Button"
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { RecetaService } from "../services/RecetaService";
+import type { RecetaActualizarDto } from "../types/RecetaTypes";
+
 
 export default function RecetaEditarPage() {
-  const [id, setId] = useState<number>(0)
-  const [form, setForm] = useState<RecetaActualizarDto>({})
-  const [cargando, setCargando] = useState(false)
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const idReceta = searchParams.get("id");
 
-  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target
-    setForm(prev => ({
-      ...prev,
-      [name]: name === "ingredientes" ? value.split(",").map(Number) : value,
-    }))
-  }
+  const [receta, setReceta] = useState<RecetaActualizarDto | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  async function handleBuscarReceta() {
+  // Cargar la receta automáticamente
+  useEffect(() => {
+    async function cargarReceta() {
+      if (!idReceta) return;
+      try {
+        const data = await RecetaService.obtenerRecetaPorId(Number(idReceta));
+
+        // Transformamos los ingredientes de objetos a IDs
+        const recetaFormateada: RecetaActualizarDto = {
+          ...data,
+          ingredientes: data.ingredientes?.map((ing) => ing.id_ingrediente) || [],
+        };
+
+        setReceta(recetaFormateada);
+      } catch (error) {
+        console.error("Error al obtener receta:", error);
+        alert("No se pudo cargar la receta");
+      } finally {
+        setLoading(false);
+      }
+    }
+    cargarReceta();
+  }, [idReceta]);
+
+  // Guardar los cambios
+  async function handleGuardar() {
+    if (!idReceta || !receta) return;
     try {
-      setCargando(true)
-      const receta = await RecetaService.obtenerRecetaPorId(id)
-      setForm({
-        nombre: receta.nombre,
-        pasos: receta.pasos,
-        foto: receta.foto,
-        id_categoria: receta.id_categoria,
-        id_pais: receta.id_pais,
-        ingredientes: receta.ingredientes,
-      })
-    } catch (e) {
-      console.error("Error al buscar la receta", e)
-    } finally {
-      setCargando(false)
+      await RecetaService.actualizarReceta(Number(idReceta), receta);
+      alert("Receta actualizada correctamente");
+      navigate("/admin/recetas");
+    } catch (error) {
+      console.error("Error al actualizar receta:", error);
+      alert("Ocurrió un error al guardar los cambios");
     }
   }
 
-  async function handleOnSubmit(e: FormEvent) {
-    e.preventDefault()
-    try {
-      setCargando(true)
-      await RecetaService.actualizarReceta(id, form)
-      alert("Receta actualizada correctamente")
-    } catch (e) {
-      console.error("Error al actualizar receta", e)
-    } finally {
-      setCargando(false)
-    }
-  }
+  if (loading) return <Typography>Cargando receta...</Typography>;
+  if (!receta) return <Typography>No se encontró la receta.</Typography>;
 
   return (
-    <div>
-      <h1>Editar Receta</h1>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Editar Receta
+      </Typography>
 
-      <TextField
-        type="number"
-        label="ID de la receta"
-        value={id}
-        onChange={e => setId(Number(e.target.value))}
-      />
-      <Button variant="contained" onClick={handleBuscarReceta}>
-        Buscar
-      </Button>
-
-      {form && (
-        <form onSubmit={handleOnSubmit}>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 6 }} >
           <TextField
-            name="nombre"
             label="Nombre"
-            value={form.nombre || ""}
-            onChange={handleOnChange}
+            fullWidth
+            value={receta.nombre}
+            onChange={(e) => setReceta({ ...receta, nombre: e.target.value })}
           />
+        </Grid>
 
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="foto"
             label="Foto (URL)"
-            value={form.foto || ""}
-            onChange={handleOnChange}
+            fullWidth
+            value={receta.foto}
+            onChange={(e) => setReceta({ ...receta, foto: e.target.value })}
           />
+        </Grid>
 
+        <Grid size={{ xs: 12}}>
           <TextField
-            name="pasos"
             label="Pasos (separar por coma)"
-            value={form.pasos?.join(", ") || ""}
-            onChange={handleOnChange}
+            fullWidth
+            value={receta.pasos?.join(", ") || ""}
+            onChange={(e) =>
+              setReceta({
+                ...receta,
+                pasos: e.target.value.split(",").map((p) => p.trim()),
+              })
+            }
           />
+        </Grid>
 
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            type="number"
-            name="id_categoria"
-            label="ID Categoría"
-            value={form.id_categoria || ""}
-            onChange={handleOnChange}
-          />
-
-          <TextField
-            type="number"
-            name="id_pais"
             label="ID País"
-            value={form.id_pais || ""}
-            onChange={handleOnChange}
+            type="number"
+            fullWidth
+            value={receta.id_pais}
+            onChange={(e) =>
+              setReceta({ ...receta, id_pais: Number(e.target.value) })
+            }
           />
+        </Grid>
 
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="ingredientes"
-            label="Ingredientes (IDs separados por coma)"
-            value={form.ingredientes?.join(", ") || ""}
-            onChange={handleOnChange}
+            label="ID Categoría"
+            type="number"
+            fullWidth
+            value={receta.id_categoria}
+            onChange={(e) =>
+              setReceta({ ...receta, id_categoria: Number(e.target.value) })
+            }
           />
+        </Grid>
 
-          <Button type="submit" variant="contained" disabled={cargando}>
+        <Grid size={{ xs: 12}}>
+          <TextField
+            label="Ingredientes (IDs separados por coma)"
+            fullWidth
+            value={receta.ingredientes?.join(", ") || ""}
+            onChange={(e) =>
+              setReceta({
+                ...receta,
+                ingredientes: e.target.value
+                  .split(",")
+                  .map((id) => Number(id.trim())),
+              })
+            }
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleGuardar}
+            sx={{ mt: 2 }}
+          >
             Guardar Cambios
           </Button>
-        </form>
-      )}
-    </div>
-  )
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }
