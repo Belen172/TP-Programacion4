@@ -24,8 +24,12 @@ export default function RecetaEditarPage() {
 
         // Transformamos los ingredientes de objetos a IDs
         const recetaFormateada: RecetaActualizarDto = {
-          ...data,
-          ingredientes: data.ingredientes?.map((ing) => ing.id_ingrediente) || [],
+          nombre: data.nombre,
+          pasos: data.pasos,
+          foto: data.foto,
+          id_categoria: data.categoria.id_categoria,
+          id_pais: data.pais.id_pais,
+          ingredientes: data.ingredientes?.map((ing) => ing.id_ingrediente) || []
         };
 
         setReceta(recetaFormateada);

@@ -1,8 +1,7 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { RecetaService } from '../services/RecetaService'
 import type { Receta } from "../types/RecetaTypes"
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { useNavigate } from 'react-router-dom'
 import { AgGridReact } from 'ag-grid-react'
@@ -87,7 +86,7 @@ export default function RecetasPage() {
     fetchRecetas()
   }, [])
 
-  const rowSelection: "single" | "multiple" = "single"
+
 
   const gridStyle = {
     height: "auto",
