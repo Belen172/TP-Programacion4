@@ -17,10 +17,10 @@ export class RecetaController {
     return this.recetaService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.recetaService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+  return this.recetaService.findOne(+id);
+  }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateRecetaDto: UpdateRecetaDto) {

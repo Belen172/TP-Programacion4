@@ -49,6 +49,10 @@ export class RecetaService {
     });
   }
 
+    findOne(id_receta: number) {
+    return this.recetaRepository.findOne({where:{id_receta}})
+  }
+
   async update(id_receta: number, updateRecetaDTO: UpdateRecetaDto): Promise<Receta> {
 
     const recetaExistente = await this.recetaRepository.findOne({where: {id_receta}});

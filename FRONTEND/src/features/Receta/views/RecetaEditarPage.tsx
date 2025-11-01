@@ -20,6 +20,8 @@ export default function RecetaEditarPage() {
       try {
         const data = await RecetaService.obtenerRecetaPorId(Number(idReceta));
 
+        console.log(data);
+
         // Transformamos los ingredientes de objetos a IDs
         const recetaFormateada: RecetaActualizarDto = {
           ...data,
@@ -40,6 +42,7 @@ export default function RecetaEditarPage() {
   // Guardar los cambios
   async function handleGuardar() {
     if (!idReceta || !receta) return;
+    
     try {
       await RecetaService.actualizarReceta(Number(idReceta), receta);
       alert("Receta actualizada correctamente");
