@@ -66,10 +66,25 @@ export class RecetaService {
     ingredientes = updateRecetaDTO.ingredientes.map(id => ({ id_ingrediente: id }));
   }
 
+
+  let pais;
+  if (updateRecetaDTO.id_pais) {
+    pais = { pais: { id_pais: updateRecetaDTO.id_pais } };
+  }
+
+  let categoria;
+  if (updateRecetaDTO.id_categoria) {
+   categoria = { categoria: { id_categoria: updateRecetaDTO.id_categoria } };
+  }
+
+
   const updated = this.recetaRepository.merge(recetaExistente, {
     ...updateRecetaDTO,
+    ...pais,
+    ...categoria,
     ...(ingredientes && { ingredientes }),
   });
+
 
   return await this.recetaRepository.save(updated);
 

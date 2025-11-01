@@ -3,6 +3,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { RecetaService } from "../services/RecetaService";
 import type { RecetaActualizarDto } from "../types/RecetaTypes";
+import { SelectPais } from "src/shared/componentes/SelectPais";
+import { SelectCategoria } from "src/shared/componentes/SelectCategoria";
+import { SelectIngredientes } from "src/shared/componentes/SelectIngredientes";
 
 
 export default function RecetaEditarPage() {
@@ -19,8 +22,6 @@ export default function RecetaEditarPage() {
       if (!idReceta) return;
       try {
         const data = await RecetaService.obtenerRecetaPorId(Number(idReceta));
-
-        console.log(data);
 
         // Transformamos los ingredientes de objetos a IDs
         const recetaFormateada: RecetaActualizarDto = {
@@ -48,6 +49,8 @@ export default function RecetaEditarPage() {
     if (!idReceta || !receta) return;
     
     try {
+
+      console.log(receta);
       await RecetaService.actualizarReceta(Number(idReceta), receta);
       alert("Receta actualizada correctamente");
       navigate("/admin/recetas");
@@ -100,43 +103,27 @@ export default function RecetaEditarPage() {
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextField
-            label="ID País"
-            type="number"
-            fullWidth
-            value={receta.id_pais}
-            onChange={(e) =>
-              setReceta({ ...receta, id_pais: Number(e.target.value) })
-            }
+          <SelectPais
+            value={Number (receta.id_pais)}
+            onChange={(id) => setReceta({ ...receta, id_pais: id })}
           />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextField
-            label="ID Categoría"
-            type="number"
-            fullWidth
-            value={receta.id_categoria}
-            onChange={(e) =>
-              setReceta({ ...receta, id_categoria: Number(e.target.value) })
-            }
+          <SelectCategoria
+             value={Number (receta.id_categoria)}
+            onChange={(id) => setReceta({ ...receta, id_categoria: id })}
           />
+
         </Grid>
 
         <Grid size={{ xs: 12}}>
-          <TextField
-            label="Ingredientes (IDs separados por coma)"
-            fullWidth
-            value={receta.ingredientes?.join(", ") || ""}
-            onChange={(e) =>
-              setReceta({
-                ...receta,
-                ingredientes: e.target.value
-                  .split(",")
-                  .map((id) => Number(id.trim())),
-              })
-            }
+          <SelectIngredientes 
+            label="Ingredientes"
+            value={receta.ingredientes || []}
+            onChange={(nuevosIds) => setReceta({ ...receta, ingredientes: nuevosIds })}
           />
+
         </Grid>
 
         <Grid size={{ xs: 12 }}>
