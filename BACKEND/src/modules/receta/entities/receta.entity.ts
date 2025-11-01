@@ -29,5 +29,5 @@ export class Receta {
     joinColumn: { name: 'id_receta', referencedColumnName: 'id_receta' },
     inverseJoinColumn: { name: 'id_ingrediente', referencedColumnName: 'id_ingrediente' },
   })
-  ingredientes: Ingrediente[];
+  ingredientes?: Ingrediente[];
 }

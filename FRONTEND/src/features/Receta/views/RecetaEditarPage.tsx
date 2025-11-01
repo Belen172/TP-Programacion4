@@ -48,8 +48,9 @@ export default function RecetaEditarPage() {
   async function handleGuardar() {
     if (!idReceta || !receta) return;
     
-    try {
+    console.log(receta)
 
+    try {
       console.log(receta);
       await RecetaService.actualizarReceta(Number(idReceta), receta);
       alert("Receta actualizada correctamente");

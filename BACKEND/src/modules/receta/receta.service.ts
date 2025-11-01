@@ -61,12 +61,6 @@ export class RecetaService {
       throw new NotFoundException("Receta no encontrada");
     }
 
-  let ingredientes;
-  if (updateRecetaDTO.ingredientes) {
-    ingredientes = updateRecetaDTO.ingredientes.map(id => ({ id_ingrediente: id }));
-  }
-
-
   let pais;
   if (updateRecetaDTO.id_pais) {
     pais = { pais: { id_pais: updateRecetaDTO.id_pais } };
@@ -77,14 +71,27 @@ export class RecetaService {
    categoria = { categoria: { id_categoria: updateRecetaDTO.id_categoria } };
   }
 
+  //buscar ingredientes segun ids pasados por el  front
+  let ingredientes;
+  if (updateRecetaDTO.ingredientes?.length) {
+
+  delete recetaExistente.ingredientes;
+
+  const ingredientesEnUpdateRecetaDTO = await this.ingredienteRepository.findBy({
+    id_ingrediente: In(updateRecetaDTO.ingredientes),
+  });
+
+  ingredientes = ingredientesEnUpdateRecetaDTO;
+  }
 
   const updated = this.recetaRepository.merge(recetaExistente, {
     ...updateRecetaDTO,
     ...pais,
     ...categoria,
-    ...(ingredientes && { ingredientes }),
+    ingredientes
   });
 
+  console.log(updated);
 
   return await this.recetaRepository.save(updated);
 
