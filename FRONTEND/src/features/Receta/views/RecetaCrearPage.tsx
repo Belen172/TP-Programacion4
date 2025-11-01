@@ -4,6 +4,9 @@ import { RecetaService } from "../services/RecetaService"
 import type { RecetaCrearDto } from "../types/RecetaTypes"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+import { SelectCategoria } from "src/shared/componentes/SelectCategoria"
+import { SelectPais } from "src/shared/componentes/SelectPais"
+import { SelectIngredientes } from "src/shared/componentes/SelectIngredientes"
 
 const estadoInicial: RecetaCrearDto = {
   nombre: "",
@@ -85,35 +88,20 @@ export default function RecetaCrearPage() {
           margin="normal"
         />
 
-        <TextField
-          required
-          type="number"
-          name="id_categoria"
-          label="ID Categoría"
-          value={form.id_categoria}
-          onChange={handleOnChange}
-          fullWidth
-          margin="normal"
+        <SelectCategoria
+          value={Number (form.id_categoria)}
+          onChange={(id) => setForm({ ...form, id_categoria: id })}
         />
 
-        <TextField
-          required
-          type="number"
-          name="id_pais"
-          label="ID País"
-          value={form.id_pais}
-          onChange={handleOnChange}
-          fullWidth
-          margin="normal"
+        <SelectPais
+          value={Number (form.id_pais)}
+          onChange={(id) => setForm({ ...form, id_pais: id })}
         />
 
-        <TextField
-          name="ingredientes"
-          label="Ingredientes (IDs separados por coma)"
-          value={form.ingredientes.join(", ")}
-          onChange={handleOnChange}
-          fullWidth
-          margin="normal"
+        <SelectIngredientes
+          label="Ingredientes"
+          value={form.ingredientes || []}
+          onChange={(nuevosIds) => setForm({ ...form, ingredientes: nuevosIds })}
         />
 
         <div style={{ marginTop: 20 }}>
