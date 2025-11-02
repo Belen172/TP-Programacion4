@@ -6,6 +6,7 @@ import type { RecetaActualizarDto } from "../types/RecetaTypes";
 import { SelectPais } from "src/shared/componentes/SelectPais";
 import { SelectCategoria } from "src/shared/componentes/SelectCategoria";
 import { SelectIngredientes } from "src/shared/componentes/SelectIngredientes";
+import { ListaPasos } from "src/shared/componentes/ListaPasos";
 
 
 export default function RecetaEditarPage() {
@@ -89,19 +90,6 @@ export default function RecetaEditarPage() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12}}>
-          <TextField
-            label="Pasos (separar por coma)"
-            fullWidth
-            value={receta.pasos?.join(", ") || ""}
-            onChange={(e) =>
-              setReceta({
-                ...receta,
-                pasos: e.target.value.split(",").map((p) => p.trim()),
-              })
-            }
-          />
-        </Grid>
 
         <Grid size={{ xs: 12, sm: 6 }}>
           <SelectPais
@@ -127,16 +115,46 @@ export default function RecetaEditarPage() {
 
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12}}>
+          <ListaPasos
+            label="Pasos de la receta"
+            value={receta.pasos || []}
+            onChange={(nuevos) => setReceta({ ...receta, pasos: nuevos })}
+
+          />
+        </Grid>
+        <Box
+          sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: "flex",
+          justifyContent: "center",
+          backgroundColor: "rgb(255, 255, 255)", // fondo blanco translúcido
+          py: 1,
+          gap: 2,
+          boxShadow: "0 -2px 6px rgba(0,0,0,0.1)", // sombra superior sutil
+          }}
+          >
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleGuardar}
+            sx={{ width: "50%", maxWidth: 320 }}
+          >   
+          Cancelar
+          </Button>
           <Button
             variant="contained"
             color="primary"
             onClick={handleGuardar}
-            sx={{ mt: 2 }}
-          >
-            Guardar Cambios
+            sx={{ width: "50%", maxWidth: 320 }}
+          >   
+          Guardar Cambios
           </Button>
-        </Grid>
+        </Box>
+
       </Grid>
     </Box>
   );
