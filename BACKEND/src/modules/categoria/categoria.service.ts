@@ -4,13 +4,17 @@ import { Repository} from 'typeorm';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { Categoria } from './entities/categoria.entity';
+import { Receta } from '../receta/entities/receta.entity';
 
 @Injectable()
 export class CategoriaService {
 
    constructor(
           @InjectRepository(Categoria)
-          private readonly categoriaRepository : Repository<Categoria>){}
+          private readonly categoriaRepository : Repository<Categoria>,
+
+          @InjectRepository(Receta)
+          private readonly recetaRepository : Repository<Categoria>){}
   
 
   async create(createCategoriaDto: CreateCategoriaDto) {
@@ -63,7 +67,27 @@ export class CategoriaService {
      return await this.categoriaRepository.save(updated);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} categoria`;
+  async remove(id_categoria: number) {
+    
+    const categoriaAEliminar = await this.categoriaRepository.findOne({where:{id_categoria: id_categoria}});
+
+    if(!categoriaAEliminar){
+      throw new ConflictException ("Categoria no encontrada");
+    }
+
+    const recetasAsociadas = await this.recetaRepository.count({
+      where: { categoria: { id_categoria } } as any,
+      });
+
+
+    if (recetasAsociadas > 0) {
+      throw new ConflictException(
+        `No se puede eliminar la categoría porque tiene recetas asociadas.`,
+      );
+    }
+
+    await this.categoriaRepository.remove(categoriaAEliminar)
+
+    return {mensaje: "Categoria eliminada"};
   }
 }

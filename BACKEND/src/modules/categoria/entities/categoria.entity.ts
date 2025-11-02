@@ -12,6 +12,6 @@ export class Categoria {
     @Column({ nullable: true })
     descripcion: string;
 
-    @OneToMany(() => Receta, receta => receta.categoria)
+    @OneToMany(() => Receta, receta => receta.categoria )
     recetas: Receta[];
 }

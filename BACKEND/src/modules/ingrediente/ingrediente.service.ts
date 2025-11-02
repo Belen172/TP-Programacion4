@@ -4,13 +4,18 @@ import { Repository} from 'typeorm';
 import { CreateIngredienteDto } from './dto/create-ingrediente.dto';
 import { UpdateIngredienteDto } from './dto/update-ingrediente.dto';
 import { Ingrediente } from './entities/ingrediente.entity';
+import { Receta } from '../receta/entities/receta.entity';
 
 @Injectable()
 export class IngredienteService {
 
    constructor(
           @InjectRepository(Ingrediente)
-          private readonly ingredienteRepository : Repository<Ingrediente>){}
+          private readonly ingredienteRepository : Repository<Ingrediente>,
+
+          @InjectRepository(Receta)
+          private readonly recetaRepository : Repository<Receta>){}
+
 
 
   async create(createIngredienteDto: CreateIngredienteDto) {
@@ -62,7 +67,29 @@ export class IngredienteService {
      return await this.ingredienteRepository.save(updated);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ingrediente`;
+  async remove(id_ingrediente: number) {
+    
+    const IngredienteAEliminar = await this.ingredienteRepository.findOne({where:{id_ingrediente: id_ingrediente}});
+
+    if(!IngredienteAEliminar){
+      throw new ConflictException ("Ingrediente no encontrado");
+    }
+
+      const recetasAsociadas = await this.recetaRepository
+        .createQueryBuilder('receta')
+        .innerJoin('receta.ingredientes', 'ingrediente')
+        .where('ingrediente.id_ingrediente = :id', { id: id_ingrediente })
+        .getCount();
+
+
+    if (recetasAsociadas > 0) {
+      throw new ConflictException(
+        `No se puede eliminar el ingrediente porque tiene recetas asociadas.`,
+      );
+    }
+
+    await this.ingredienteRepository.remove(IngredienteAEliminar)
+
+    return {mensaje: "Ingrediente eliminado"};
   }
 }
