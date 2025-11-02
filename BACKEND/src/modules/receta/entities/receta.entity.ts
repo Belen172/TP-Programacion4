@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn} from 'typeorm';
 import { Categoria } from '../../categoria/entities/categoria.entity';
 import { Pais } from '../../pais/entities/pais.entity';
 import { Ingrediente } from '../../ingrediente/entities/ingrediente.entity';
