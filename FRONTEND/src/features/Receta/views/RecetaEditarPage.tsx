@@ -140,7 +140,7 @@ export default function RecetaEditarPage() {
           <Button
             variant="contained"
             color="error"
-            onClick={handleGuardar}
+            onClick={() => navigate("/admin/recetas")}
             sx={{ width: "50%", maxWidth: 320 }}
           >   
           Cancelar
