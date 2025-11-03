@@ -8,7 +8,6 @@ import {
   CardActions,
   Collapse,
   Button,
-  CardMedia,
   Grid,
   IconButton,
   Drawer,
@@ -158,19 +157,6 @@ export default function RecetasBuscarPage() {
                 "&:hover": { boxShadow: 6 },
               }}
             >
-              {receta.foto && (
-                <CardMedia
-                  component="img"
-                  height="160"
-                  image={
-                    receta.foto.startsWith("http")
-                      ? receta.foto
-                      : `/uploads/${receta.foto}`
-                  }
-                  alt={receta.nombre}
-                  sx={{ objectFit: "cover" }}
-                />
-              )}
 
               <CardContent>
                 <Typography variant="h6">{receta.nombre}</Typography>

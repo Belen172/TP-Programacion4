@@ -18,10 +18,9 @@ export class RecetaService {
   ) {}
 
   async create(createRecetaDto: CreateRecetaDto) {
-    // Extraemos los campos del DTO
+ 
     const { nombre, pasos, foto, id_categoria, id_pais, ingredientes } = createRecetaDto;
 
-    // 1️⃣ Creamos la receta base
     const nuevaReceta = this.recetaRepository.create({
       nombre,
       pasos,
@@ -91,7 +90,6 @@ export class RecetaService {
     ingredientes
   });
 
-  console.log(updated);
 
   return await this.recetaRepository.save(updated);
 
