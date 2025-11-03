@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Instancia de Axios configurada para el backend
 const api = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
+    baseURL: import.meta.env.VITE_API_URL,
     headers: {
         'Content-Type': 'application/json'
     },

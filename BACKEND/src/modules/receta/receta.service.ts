@@ -2,98 +2,143 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRecetaDto } from './dto/create-receta.dto';
 import { UpdateRecetaDto } from './dto/update-receta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Receta } from './entities/receta.entity';
 import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
+import { RecetaIngrediente } from './entities/receta_ingrediente';
 
 @Injectable()
 export class RecetaService {
-
   constructor(
     @InjectRepository(Receta)
     private readonly recetaRepository: Repository<Receta>,
- 
+
     @InjectRepository(Ingrediente)
     private readonly ingredienteRepository: Repository<Ingrediente>,
+
+    @InjectRepository(RecetaIngrediente)
+    private readonly recetaIngredienteRepository: Repository<RecetaIngrediente>,
   ) {}
 
-  async create(createRecetaDto: CreateRecetaDto) {
- 
-    const { nombre, pasos, foto, id_categoria, id_pais, ingredientes } = createRecetaDto;
-
-    const nuevaReceta = this.recetaRepository.create({
-      nombre,
-      pasos,
-      foto,
-      categoria: { id_categoria } as any,
-      pais: { id_pais } as any,
+  // Crear una nueva receta con ingredientes + cantidad
+  async create(createRecetaDto: any) {
+    const receta = this.recetaRepository.create({
+      nombre: createRecetaDto.nombre,
+      pasos: createRecetaDto.pasos,
+      foto: createRecetaDto.foto,
+      categoria: { id_categoria: createRecetaDto.id_categoria } as any,
+      pais: { id_pais: createRecetaDto.id_pais } as any,
     });
 
-    // 2️⃣ Si vienen ingredientes, los buscamos en la base de datos
-    if (ingredientes && ingredientes.length > 0) {
-      const ingredientesEncontrados = await this.ingredienteRepository.findBy({
-        id_ingrediente: In(ingredientes),
-      });
-      nuevaReceta.ingredientes = ingredientesEncontrados;
-    }
+    // Guardamos primero la receta para tener su ID
+    const recetaGuardada = await this.recetaRepository.save(receta);
 
-    // 3️⃣ Guardamos la receta junto con sus relaciones
-    return this.recetaRepository.save(nuevaReceta);
+    // 💡 Luego creamos las relaciones con los ingredientes
+    const recetaIngredientes = createRecetaDto.ingredientes.map((ing) =>
+      this.recetaIngredienteRepository.create({
+        receta: recetaGuardada,
+        ingrediente: { id_ingrediente: ing.id_ingrediente },
+        cantidad: ing.cantidad,
+      }),
+    );
 
-  }
+    // Guardamos los vínculos en la tabla intermedia
+    await this.recetaIngredienteRepository.save(recetaIngredientes);
 
-  findAll(): Promise<Receta[]> {
-    return this.recetaRepository.find({
-      relations: ['pais', 'categoria', 'ingredientes'],
+    // Devolvemos la receta completa con sus ingredientes
+    return await this.recetaRepository.findOne({
+      where: { id_receta: recetaGuardada.id_receta },
+      relations: ['recetaIngredientes', 'categoria', 'pais'],
     });
   }
 
-    findOne(id_receta: number) {
-    return this.recetaRepository.findOne({where:{id_receta}})
-  }
 
-  async update(id_receta: number, updateRecetaDTO: UpdateRecetaDto): Promise<Receta> {
+  async findAll() {
+    // Traemos todas las recetas con sus relaciones
+    const recetas = await this.recetaRepository.find({
+      relations: [
+        'categoria',
+        'pais',
+        'recetaIngredientes',
+        'recetaIngredientes.ingrediente',
+      ],
+    });
 
-    const recetaExistente = await this.recetaRepository.findOne({where: {id_receta}});
-    
-    if(!recetaExistente){
-      throw new NotFoundException("Receta no encontrada");
+    // Transformamos cada receta para incluir los ingredientes
+    return recetas.map((receta) => {
+      const ingredientes = receta.recetaIngredientes.map((ri) => ({
+        id_ingrediente: ri.ingrediente.id_ingrediente,
+        nombre: ri.ingrediente.nombre,
+        unidad_medida: ri.ingrediente.unidad_medida,
+        cantidad: ri.cantidad,
+      }));
+
+      return { ...receta, ingredientes };
+    });
+  } 
+
+
+  async findOne(id: number) {
+    // Buscamos la receta con todas las relaciones
+    const receta = await this.recetaRepository.findOne({
+      where: { id_receta: id },
+      relations: [
+        'categoria',
+        'pais',
+        'recetaIngredientes',
+        'recetaIngredientes.ingrediente',
+      ],
+    });
+
+    if (!receta) throw new NotFoundException('Receta no encontrada');
+
+    // Convertimos recetaIngredientes al formato que espera el front
+    const ingredientes = receta.recetaIngredientes.map((ri) => ({
+      id_ingrediente: ri.ingrediente.id_ingrediente,
+      nombre: ri.ingrediente.nombre,
+      unidad_medida: ri.ingrediente.unidad_medida,
+      cantidad: ri.cantidad,
+    }));
+
+    // Devolvemos la receta con los ingredientes listos para mostrar
+    return { ...receta, ingredientes };
+  } 
+
+
+  // Actualizar una receta existente con ingredientes + cantidad
+  async update(id: number, updateRecetaDto: any) {
+    const receta = await this.recetaRepository.findOne({
+      where: { id_receta: id },
+      relations: ['recetaIngredientes'],
+    });
+
+    if (!receta) {
+      throw new NotFoundException(`Receta con id ${id} no encontrada`);
     }
 
-  let pais;
-  if (updateRecetaDTO.id_pais) {
-    pais = { pais: { id_pais: updateRecetaDTO.id_pais } };
+    // Actualizamos los campos básicos
+    receta.nombre = updateRecetaDto.nombre;
+    receta.pasos = updateRecetaDto.pasos;
+    receta.foto = updateRecetaDto.foto;
+    receta.categoria = { id_categoria: updateRecetaDto.id_categoria } as any;
+    receta.pais = { id_pais: updateRecetaDto.id_pais } as any;
+
+    // Primero borramos los ingredientes anteriores
+    await this.recetaIngredienteRepository.delete({ receta: { id_receta: id } });
+
+    // Ahora recreamos los nuevos ingredientes recibidos
+    const nuevosIngredientes = updateRecetaDto.ingredientes.map((ing) =>
+      this.recetaIngredienteRepository.create({
+        receta,
+        ingrediente: { id_ingrediente: ing.id_ingrediente },
+        cantidad: ing.cantidad,
+      }),
+    );
+
+    receta.recetaIngredientes = nuevosIngredientes;
+
+    // Guardamos todo
+    return await this.recetaRepository.save(receta);
   }
-
-  let categoria;
-  if (updateRecetaDTO.id_categoria) {
-   categoria = { categoria: { id_categoria: updateRecetaDTO.id_categoria } };
-  }
-
-  //buscar ingredientes segun ids pasados por el  front
-  let ingredientes;
-  if (updateRecetaDTO.ingredientes?.length) {
-
-  delete recetaExistente.ingredientes;
-
-  const ingredientesEnUpdateRecetaDTO = await this.ingredienteRepository.findBy({
-    id_ingrediente: In(updateRecetaDTO.ingredientes),
-  });
-
-  ingredientes = ingredientesEnUpdateRecetaDTO;
-  }
-
-  const updated = this.recetaRepository.merge(recetaExistente, {
-    ...updateRecetaDTO,
-    ...pais,
-    ...categoria,
-    ingredientes
-  });
-
-
-  return await this.recetaRepository.save(updated);
-
-  }
-
-
 }
+

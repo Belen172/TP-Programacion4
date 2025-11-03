@@ -109,13 +109,14 @@ export default function AppLayout() {
 
                     <Box sx={{ flex: 1 }} />
 
+                    {/* Íconos de notificaciones y perfil de usuario 
                     <IconButton aria-label="notifications" sx={{ ml: 0.5 }}>
                         <NotificationsNoneOutlinedIcon />
                     </IconButton>
 
                     <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ ml: 0.5 }}>
                         <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
-                    </IconButton>
+                    </IconButton> */}
 
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                         <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>

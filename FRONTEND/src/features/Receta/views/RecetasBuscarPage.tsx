@@ -23,6 +23,7 @@ import { CategoriaService } from "../../Categoria/services/CategoriaService";
 import { PaisService } from "../../Pais/services/PaisService";
 import type { Receta } from "../types/RecetaTypes";
 
+
 export default function RecetasBuscarPage() {
   const [recetas, setRecetas] = useState<Receta[]>([]);
   const [filtro, setFiltro] = useState("");
@@ -157,12 +158,35 @@ export default function RecetasBuscarPage() {
                 "&:hover": { boxShadow: 6 },
               }}
             >
+              {receta.foto && (
+                <img
+                  src={
+                    receta.foto.startsWith("http")
+                      ? receta.foto
+                      : `${import.meta.env.VITE_API_URL}${receta.foto}`
+                  }
+                  alt={receta.nombre}
+                  style={{
+                    width: "100%",
+                    height: "180px",
+                    objectFit: "cover",
+                    borderTopLeftRadius: "4px",
+                    borderTopRightRadius: "4px",
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                    console.error("No se pudo cargar la imagen:", receta.foto);
+                  }}
+                />
+              )}
 
               <CardContent>
                 <Typography variant="h6">{receta.nombre}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   Ingredientes:{" "}
-                  {receta.ingredientes.map((i) => i.nombre).join(", ") || "-"}
+                  {receta.ingredientes
+                    ?.map((ri: any) => `${ri.nombre} (${ri.cantidad} ${ri.unidad_medida})`)
+                    .join(", ") || "-"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   País: {receta.pais?.nombre || "-"}

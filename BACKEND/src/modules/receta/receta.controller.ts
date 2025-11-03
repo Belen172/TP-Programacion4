@@ -29,7 +29,7 @@ async create(
 ) {
   const fotoPath = file ? `/fotosRecetas/${file.filename}` : null;
 
-  // 🔧 convertir campos a sus tipos reales
+  // convertir campos a sus tipos reales
   const dto = {
     nombre: String(body.nombre),
     id_categoria: Number(body.id_categoria),

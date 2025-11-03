@@ -25,25 +25,25 @@ export default function AdminPage() {
       titulo: "Recetas",
       descripcion: "Administrá las recetas registradas",
       icono: <RestaurantMenuIcon sx={{ fontSize: 50, color: "#1565c0" }} />,
-      ruta: "/admin/recetas",
+      ruta: "recetas",
     },
     {
       titulo: "Países",
       descripcion: "Gestioná los países asociados a las recetas",
       icono: <PublicIcon sx={{ fontSize: 50, color: "#2e7d32" }} />,
-      ruta: "/admin/paises",
+      ruta: "paises",
     },
     {
       titulo: "Categorías",
       descripcion: "Organizá las categorías de recetas",
       icono: <CategoryIcon sx={{ fontSize: 50, color: "#f9a825" }} />,
-      ruta: "/admin/categorias",
+      ruta: "categorias",
     },
     {
       titulo: "Ingredientes",
       descripcion: "Mantené actualizado el listado de ingredientes",
       icono: <SoupKitchenIcon sx={{ fontSize: 50, color: "#ad1457" }} />,
-      ruta: "/admin/ingredientes",
+      ruta: "ingredientes",
     },
   ];
 
@@ -76,7 +76,7 @@ return (
                     },
                   }}
                 >
-                  <CardActionArea onClick={() => navigate(item.ruta)}>
+                  <CardActionArea onClick={() => navigate(item.ruta, { relative: "path" })}>
                     <Box
                       sx={{
                         display: "flex",

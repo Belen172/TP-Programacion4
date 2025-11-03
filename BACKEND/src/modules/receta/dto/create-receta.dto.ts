@@ -1,4 +1,14 @@
-import { IsString, IsArray, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsArray, IsOptional, IsInt, ValidateNested, Min, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class IngredienteCantidadDto {
+  @IsInt()
+  id_ingrediente: number;
+
+  @IsNumber()
+  @Min(0)
+  cantidad: number;
+}
 
 export class CreateRecetaDto {
   @IsString()
@@ -19,6 +29,9 @@ export class CreateRecetaDto {
   id_pais: number;
 
   @IsArray()
-  @IsInt({ each: true })
-  ingredientes: number[];
+  @ValidateNested({ each: true })
+  @Type(() => IngredienteCantidadDto)
+  ingredientes: IngredienteCantidadDto[];
 }
+
+export class UpdateRecetaDto extends CreateRecetaDto {}

@@ -1,27 +1,21 @@
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import { StrictMode } from "react";
-import { createRoot } from 'react-dom/client'
-import { router } from './app/routes.tsx'
-import { RouterProvider } from "react-router/dom";
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
-import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import {theme} from "./theme";
+import { router } from "./app/routes";
+import { ModuleRegistry } from "ag-grid-community";
+import { AllCommunityModule } from "ag-grid-community";
 
-let theme = createTheme({
-  palette: { mode: "light" },
-});
-
-theme = responsiveFontSizes(theme);
-
-export default theme;
-
-// Register all Community features
+// Registrar todos los módulos de AG Grid (evita el error #272)
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <RouterProvider router={router} />
-    </StrictMode>
-)
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </React.StrictMode>
+);

@@ -1,5 +1,5 @@
-import { Receta } from 'src/modules/receta/entities/receta.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { RecetaIngrediente } from 'src/modules/receta/entities/receta_ingrediente';
 
 @Entity()
 export class Ingrediente {
@@ -12,6 +12,7 @@ export class Ingrediente {
   @Column()
   unidad_medida: string;
 
-  @ManyToMany(() => Receta, (receta) => receta.ingredientes)
-  recetas: Receta[];
+  @OneToMany(() => RecetaIngrediente, (ri) => ri.ingrediente)
+  recetaIngredientes: RecetaIngrediente[];
 }
+

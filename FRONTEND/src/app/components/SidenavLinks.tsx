@@ -2,18 +2,12 @@ import React from "react";
 import {
   List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Collapse,
   Divider,
+  Box,
 } from "@mui/material";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PublicIcon from "@mui/icons-material/Public";
-import CategoryIcon from "@mui/icons-material/Category";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
 
 interface Props {
@@ -26,79 +20,91 @@ export default function SidenavLinks({ handleClick }: Props) {
   const handleToggleAdmin = () => setOpenAdmin((prev) => !prev);
 
   return (
-    <>
+    <Box>
+      {/* 🌿 LINK PRINCIPAL */}
       <List>
         <ListItemButton
           component={RouterLink}
           to="/recetas"
           onClick={handleClick}
+          sx={{
+            borderRadius: 2,
+            mb: 0.5,
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "rgba(76, 175, 80, 0.08)", // verde suave
+            },
+          }}
         >
-          <ListItemIcon>
-            <RestaurantMenuIcon />
-          </ListItemIcon>
-          <ListItemText primary="Ver Recetas" />
+          <ListItemText
+            primary="Ver Recetas"
+            primaryTypographyProps={{
+              fontFamily: "'Quicksand', sans-serif",
+              fontWeight: 600,
+            }}
+          />
         </ListItemButton>
       </List>
 
       <Divider sx={{ my: 1 }} />
 
+      {/* 🌿 SECCIÓN ADMIN */}
       <List>
-        <ListItemButton onClick={handleToggleAdmin}>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Administración" />
+        <ListItemButton
+          onClick={handleToggleAdmin}
+          sx={{
+            borderRadius: 2,
+            mb: 0.5,
+            "&:hover": {
+              backgroundColor: "rgba(76, 175, 80, 0.08)",
+            },
+          }}
+        >
+          <ListItemText
+            primary="Administración"
+            primaryTypographyProps={{
+              fontFamily: "'Quicksand', sans-serif",
+              fontWeight: 600,
+            }}
+          />
           {openAdmin ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
 
         <Collapse in={openAdmin} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 4 }}>
-            <ListItemButton
-              component={RouterLink}
-              to="/admin/recetas"
-              onClick={handleClick}
-            >
-              <ListItemIcon>
-                <RestaurantMenuIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Recetas" />
-            </ListItemButton>
-
-            <ListItemButton
-              component={RouterLink}
-              to="/admin/paises"
-              onClick={handleClick}
-            >
-              <ListItemIcon>
-                <PublicIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Países" />
-            </ListItemButton>
-
-            <ListItemButton
-              component={RouterLink}
-              to="/admin/categorias"
-              onClick={handleClick}
-            >
-              <ListItemIcon>
-                <CategoryIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Categorías" />
-            </ListItemButton>
-
-            <ListItemButton
-              component={RouterLink}
-              to="/admin/ingredientes"
-              onClick={handleClick}
-            >
-              <ListItemIcon>
-                <SoupKitchenIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Ingredientes" />
-            </ListItemButton>
+          <List component="div" disablePadding sx={{ pl: 3 }}>
+            {[
+              { text: "Recetas", path: "/admin/recetas" },
+              { text: "Países", path: "/admin/paises" },
+              { text: "Categorías", path: "/admin/categorias" },
+              { text: "Ingredientes", path: "/admin/ingredientes" },
+            ].map((item) => (
+              <ListItemButton
+                key={item.text}
+                component={RouterLink}
+                to={item.path}
+                onClick={handleClick}
+                sx={{
+                  borderRadius: 2,
+                  mb: 0.3,
+                  pl: 4,
+                  "&:hover": {
+                    backgroundColor: "rgba(139, 195, 74, 0.1)",
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={item.text}
+                  primaryTypographyProps={{
+                    fontFamily: "'Quicksand', sans-serif",
+                    fontWeight: 500,
+                    fontSize: "0.95rem",
+                  }}
+                />
+              </ListItemButton>
+            ))}
           </List>
         </Collapse>
       </List>
-    </>
+    </Box>
   );
 }
