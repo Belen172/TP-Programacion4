@@ -1,86 +1,109 @@
-import { useState } from "react"
-import type { FormEvent, ChangeEvent } from "react"
-import { IngredienteService } from "../services/IngredienteService"
-import type { ActualizarIngredienteDto } from "../types/IngredienteTypes"
-import TextField from "@mui/material/TextField"
-import Button from "@mui/material/Button"
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { IngredienteService } from "../services/IngredienteService";
+import type { ActualizarIngredienteDto } from "../types/IngredienteTypes";
 
 export default function IngredienteEditarPage() {
-  const [id, setId] = useState<number>(0)
-  const [form, setForm] = useState<ActualizarIngredienteDto>({ nombre: "", unidad_medida: "" })
-  const [cargando, setCargando] = useState(false)
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const idIngrediente = searchParams.get("id");
 
-  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
-  }
+  const [ingrediente, setIngrediente] = useState<ActualizarIngredienteDto | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  async function handleBuscarIngrediente() {
+  useEffect(() => {
+    async function cargarIngrediente() {
+      if (!idIngrediente) return;
+      try {
+        const data = await IngredienteService.obtenerIngredientePorId(Number(idIngrediente));
+        const ingredienteFormateado: ActualizarIngredienteDto = {
+          nombre: data.nombre,
+          unidad_medida: data.unidad_medida,
+        };
+        setIngrediente(ingredienteFormateado);
+      } catch (error) {
+        console.error("Error al obtener ingrediente:", error);
+        alert("No se pudo cargar el ingrediente");
+      } finally {
+        setLoading(false);
+      }
+    }
+    cargarIngrediente();
+  }, [idIngrediente]);
+
+  async function handleGuardar() {
+    if (!idIngrediente || !ingrediente) return;
     try {
-      setCargando(true)
-      const ingrediente = await IngredienteService.obtenerIngredientePorId(id)
-      setForm({
-        nombre: ingrediente.nombre,
-        unidad_medida: ingrediente.unidad_medida
-      })
-    } catch (e) {
-      console.error("Error al buscar ingrediente", e)
-    } finally {
-      setCargando(false)
+      await IngredienteService.actualizarIngrediente(Number(idIngrediente), ingrediente);
+      alert("Ingrediente actualizado correctamente");
+      navigate("/admin/ingredientes");
+    } catch (error) {
+      console.error("Error al actualizar ingrediente:", error);
+      alert("Ocurrió un error al guardar los cambios");
     }
   }
 
-  async function handleOnSubmit(e: FormEvent) {
-    e.preventDefault()
-    try {
-      setCargando(true)
-      await IngredienteService.actualizarIngrediente(id, form)
-      alert("Ingrediente actualizado correctamente")
-    } catch (e) {
-      console.error("Error al actualizar ingrediente", e)
-    } finally {
-      setCargando(false)
-    }
-  }
+  if (loading) return <Typography>Cargando ingrediente...</Typography>;
+  if (!ingrediente) return <Typography>No se encontró el ingrediente.</Typography>;
 
   return (
-    <div>
-      <h1>Editar Ingrediente</h1>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Editar Ingrediente
+      </Typography>
 
-      <TextField
-        type="number"
-        label="ID del ingrediente"
-        value={id}
-        onChange={e => setId(Number(e.target.value))}
-        sx={{ marginBottom: 2 }}
-      />
-      <Button variant="contained" onClick={handleBuscarIngrediente}>
-        Buscar
-      </Button>
-
-      {form && (
-        <form onSubmit={handleOnSubmit}>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="nombre"
             label="Nombre"
-            value={form.nombre || ""}
-            onChange={handleOnChange}
-            sx={{ marginBottom: 2 }}
+            fullWidth
+            value={ingrediente.nombre}
+            onChange={(e) => setIngrediente({ ...ingrediente, nombre: e.target.value })}
           />
+        </Grid>
 
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="unidad_medida"
             label="Unidad de Medida"
-            value={form.unidad_medida || ""}
-            onChange={handleOnChange}
-            sx={{ marginBottom: 2 }}
+            fullWidth
+            value={ingrediente.unidad_medida}
+            onChange={(e) => setIngrediente({ ...ingrediente, unidad_medida: e.target.value })}
           />
+        </Grid>
+      </Grid>
 
-          <Button type="submit" variant="contained" disabled={cargando}>
-            Guardar Cambios
-          </Button>
-        </form>
-      )}
-    </div>
-  )
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: "flex",
+          justifyContent: "center",
+          backgroundColor: "rgb(255,255,255)",
+          py: 1,
+          gap: 2,
+          boxShadow: "0 -2px 6px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => navigate("/admin/ingredientes")}
+          sx={{ width: "50%", maxWidth: 320 }}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGuardar}
+          sx={{ width: "50%", maxWidth: 320 }}
+        >
+          Guardar Cambios
+        </Button>
+      </Box>
+    </Box>
+  );
 }

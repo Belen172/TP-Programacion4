@@ -1,90 +1,109 @@
-import { useState } from "react"
-import type { FormEvent, ChangeEvent } from "react"
-import { CategoriaService } from "../services/CategoriaService"
-import type { CategoriaActualizarDto } from "../types/CategoriaTypes"
-import TextField from "@mui/material/TextField"
-import Button from "@mui/material/Button"
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { CategoriaService } from "../services/CategoriaService";
+import type { CategoriaActualizarDto } from "../types/CategoriaTypes";
 
 export default function CategoriaEditarPage() {
-  const [id, setId] = useState<number>(0)
-  const [form, setForm] = useState<CategoriaActualizarDto>({})
-  const [cargando, setCargando] = useState(false)
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const idCategoria = searchParams.get("id");
 
-  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target
-    setForm(prev => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
+  const [categoria, setCategoria] = useState<CategoriaActualizarDto | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  async function handleBuscarCategoria() {
+  useEffect(() => {
+    async function cargarCategoria() {
+      if (!idCategoria) return;
+      try {
+        const data = await CategoriaService.obtenerCategoriaPorId(Number(idCategoria));
+        const categoriaFormateada: CategoriaActualizarDto = {
+          nombre: data.nombre,
+          descripcion: data.descripcion,
+        };
+        setCategoria(categoriaFormateada);
+      } catch (error) {
+        console.error("Error al obtener categoría:", error);
+        alert("No se pudo cargar la categoría");
+      } finally {
+        setLoading(false);
+      }
+    }
+    cargarCategoria();
+  }, [idCategoria]);
+
+  async function handleGuardar() {
+    if (!idCategoria || !categoria) return;
     try {
-      setCargando(true)
-      const categoria = await CategoriaService.obtenerCategoriaPorId(id)
-      setForm({
-        nombre: categoria.nombre,
-        descripcion: categoria.descripcion,
-      })
-    } catch (e) {
-      console.error("Error al buscar la categoria", e)
-    } finally {
-      setCargando(false)
+      await CategoriaService.actualizarCategoria(Number(idCategoria), categoria);
+      alert("Categoría actualizada correctamente");
+      navigate("/admin/categorias");
+    } catch (error) {
+      console.error("Error al actualizar categoría:", error);
+      alert("Ocurrió un error al guardar los cambios");
     }
   }
 
-  async function handleOnSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!id) {
-      alert("Por favor, ingresá un ID válido antes de actualizar.")
-      return
-    }
-    try {
-      setCargando(true)
-      await CategoriaService.actualizarCategoria(id, form)
-      alert("Categoria actualizada correctamente")
-    } catch (e) {
-      console.error("Error al actualizar categoria", e)
-    } finally {
-      setCargando(false)
-    }
-  }
+  if (loading) return <Typography>Cargando categoría...</Typography>;
+  if (!categoria) return <Typography>No se encontró la categoría.</Typography>;
 
   return (
-    <div>
-      <h1>Editar Categoria</h1>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Editar Categoría
+      </Typography>
 
-      <TextField
-        type="number"
-        label="ID de la categoria"
-        value={id}
-        onChange={e => setId(Number(e.target.value))}
-      />
-      <Button variant="contained" onClick={handleBuscarCategoria}>
-        Buscar
-      </Button>
-
-      {form && (
-        <form onSubmit={handleOnSubmit}>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="nombre"
             label="Nombre"
-            value={form.nombre || ""}
-            onChange={handleOnChange}
+            fullWidth
+            value={categoria.nombre}
+            onChange={(e) => setCategoria({ ...categoria, nombre: e.target.value })}
           />
+        </Grid>
 
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            name="descripcion"
-            label="Descripcion"
-            value={form.descripcion || ""}
-            onChange={handleOnChange}
+            label="Descripción"
+            fullWidth
+            value={categoria.descripcion || ""}
+            onChange={(e) => setCategoria({ ...categoria, descripcion: e.target.value })}
           />
+        </Grid>
+      </Grid>
 
-          <Button type="submit" variant="contained" disabled={cargando}>
-            Guardar Cambios
-          </Button>
-        </form>
-      )}
-    </div>
-  )
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: "flex",
+          justifyContent: "center",
+          backgroundColor: "rgb(255,255,255)",
+          py: 1,
+          gap: 2,
+          boxShadow: "0 -2px 6px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => navigate("/admin/categorias")}
+          sx={{ width: "50%", maxWidth: 320 }}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGuardar}
+          sx={{ width: "50%", maxWidth: 320 }}
+        >
+          Guardar Cambios
+        </Button>
+      </Box>
+    </Box>
+  );
 }

@@ -11,7 +11,6 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PublicIcon from "@mui/icons-material/Public";
 import CategoryIcon from "@mui/icons-material/Category";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";

@@ -1,12 +1,18 @@
 import { api } from "src/shared/libs/nestAxios"
-import type { Receta, RecetaCrearDto, RecetaActualizarDto } from "../types/RecetaTypes"
+import type { Receta } from "../types/RecetaTypes"
 
 export class RecetaService {
-  
+
   // Crear una nueva receta
-  static async crearReceta(dto: RecetaCrearDto) {
-    const result = await api.post("/api/receta", dto)
-    return result.data
+  static async crearReceta(data: FormData) {
+    const response = await fetch("http://localhost:3000/api/receta", {
+      method: "POST",
+      body: data,
+    });
+        if (!response.ok) {
+          throw new Error("Error al crear receta");
+        }
+    return response.json();
   }
 
   // Obtener todas las recetas
@@ -22,10 +28,14 @@ export class RecetaService {
   }
 
   // Actualizar una receta existente
-  static async actualizarReceta(id: number, dto: RecetaActualizarDto) {
-    const result = await api.patch(`/api/receta/${id}`, dto)
-    return result.data
-  }
+  static async actualizarReceta(id: number, data: FormData) {
+  const response = await fetch(`http://localhost:3000/api/receta/${id}`, {
+    method: "PATCH",
+    body: data,
+  });
+  if (!response.ok) throw new Error("Error al actualizar receta");
+  return response.json();
+}
 
   // Eliminar una receta
   static async eliminarReceta(id: number) {
