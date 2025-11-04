@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography, Stack, Divider } from "@mui/material";
 import { RecetaService } from "../services/RecetaService";
 import type { RecetaActualizarDto } from "../types/RecetaTypes";
 import { SelectPais } from "src/shared/componentes/SelectPais";
@@ -13,12 +13,13 @@ export default function RecetaEditarPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const idReceta = searchParams.get("id");
-
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<File | null>(null);
   const [receta, setReceta] = useState<RecetaActualizarDto | null>(null);
   const [loading, setLoading] = useState(true);
-  const [nuevaImagen, setNuevaImagen] = useState<File | null>(null);
+  const API_URL = "http://localhost:3000"
 
-  // Cargar la receta automáticamente
+
+
   useEffect(() => {
     async function cargarReceta() {
       if (!idReceta) return;
@@ -29,7 +30,7 @@ export default function RecetaEditarPage() {
         const recetaFormateada: RecetaActualizarDto = {
           nombre: data.nombre,
           pasos: data.pasos || [],
-          foto: data.foto || "",
+          foto: data.foto ? `${API_URL}${data.foto}` : "",
           id_categoria: data.categoria?.id_categoria || 0,
           id_pais: data.pais?.id_pais || 0,
           ingredientes: data.ingredientes?.map((i: any) => ({
@@ -61,11 +62,12 @@ export default function RecetaEditarPage() {
       formData.append("pasos", JSON.stringify(receta.pasos));
       formData.append("ingredientes", JSON.stringify(receta.ingredientes));
 
-      if (nuevaImagen) {
-        formData.append("foto", nuevaImagen);
-      } else {
-        formData.append("fotoActual", receta.foto || "");
-      }
+
+    if (imagenSeleccionada) {
+      formData.append("foto", imagenSeleccionada);
+    } else if (receta.foto) {
+      formData.append("fotoActual", receta.foto);
+    }
 
       await RecetaService.actualizarReceta(Number(idReceta), formData);
       alert("Receta actualizada correctamente");
@@ -80,43 +82,61 @@ export default function RecetaEditarPage() {
   if (!receta) return <Typography>No se encontró la receta.</Typography>;
 
   return (
-    <Box sx={{ p: 3 }}>
+    <>
       <Typography variant="h4" gutterBottom>
         Editar Receta
       </Typography>
 
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 6 }}>
+    <Box sx={{ p: 3 }}>
+
+      <Grid container columnSpacing={5} rowSpacing={5}>
+        <Grid size={4}>
+          <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
+          <Stack spacing={2} py={3}>
           <TextField
             label="Nombre"
             fullWidth
             value={receta.nombre}
             onChange={(e) => setReceta({ ...receta, nombre: e.target.value })}
           />
-        </Grid>
 
-        <Grid size={{ xs: 12, sm: 6 }}>
           <SelectPais
             value={Number(receta.id_pais)}
             onChange={(id) => setReceta({ ...receta, id_pais: id })}
           />
-        </Grid>
 
-        <Grid size={{ xs: 12, sm: 6 }}>
           <SelectCategoria
             value={Number(receta.id_categoria)}
             onChange={(id) => setReceta({ ...receta, id_categoria: id })}
           />
-        </Grid>
 
-        <Grid size={{ xs: 12 }}>
+          </Stack>
+          </Grid>
+
+          <Divider orientation="vertical" flexItem/>
+
+          <Grid size={6}>
+            <InputImagen
+              label="Imagen de la receta"
+              value={imagenSeleccionada || receta.foto}
+              onChange={(file) => setImagenSeleccionada(file)}
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <Divider />
+          </Grid>
+
+          <Grid size={4}>
           <SelectIngredientesConCantidad
             value={receta.ingredientes || []}
             onChange={(nuevos) => setReceta({ ...receta, ingredientes: nuevos })}
           />
-        </Grid>
+          </Grid>
 
-        <Grid size={{ xs: 12 }}>
+          <Divider orientation="vertical" flexItem/>
+
+        <Grid size={6}>
           <ListaPasos
             label="Pasos de la receta"
             value={receta.pasos || []}
@@ -124,31 +144,6 @@ export default function RecetaEditarPage() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
-          <Typography variant="subtitle1" gutterBottom>
-            Imagen actual:
-          </Typography>
-          {receta.foto && (
-            <img
-              src={
-                receta.foto.startsWith("http")
-                  ? receta.foto
-                  : `${import.meta.env.VITE_API_URL}${receta.foto}`
-              }
-              alt="Foto receta"
-              style={{
-                width: "100%",
-                maxWidth: 400,
-                borderRadius: "8px",
-                marginBottom: "1rem",
-              }}
-            />
-          )}
-          <InputImagen
-            label="Nueva imagen (opcional)"
-            value={nuevaImagen}
-            onChange={(file) => setNuevaImagen(file)}
-          />
         </Grid>
 
         <Box
@@ -182,7 +177,8 @@ export default function RecetaEditarPage() {
             Guardar Cambios
           </Button>
         </Box>
-      </Grid>
     </Box>
+
+    </>
   );
 }

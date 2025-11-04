@@ -85,8 +85,8 @@ async update(
   return this.recetaService.update(id, dto);
 }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.recetaService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+  return this.recetaService.remove(+id);
+  }
 }

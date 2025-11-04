@@ -20,12 +20,13 @@ export const SelectCategoria = ({ value, onChange }: SelectCategoriaProps) => {
   return (
     <TextField
       select
-      value={value}
+      value={value || ""}
       onChange={(e) => onChange(Number(e.target.value))}
       className="form-select"
       fullWidth
       label = "Categoria"
     >
+
       {categorias.map(p => (
         <MenuItem key={p.id_categoria} value={p.id_categoria}>
           {p.nombre}

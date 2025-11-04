@@ -25,11 +25,11 @@ export function ListaPasos({ label = "Pasos", value, onChange }: ListaPasosProps
 
   return (
     <Box>
-      <Typography variant="subtitle1" sx={{ mb: 1 }}>
-        {label}
+      <Typography variant="subtitle1">
+        <b><u>{label}</u></b>
       </Typography>
 
-      <Stack spacing={2}>
+      <Stack spacing={2} py={3}>
         {pasos.map((paso, index) => (
           <Box key={index} display="flex" alignItems="center" gap={1}>
             <TextField

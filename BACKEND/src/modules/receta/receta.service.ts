@@ -106,14 +106,14 @@ export class RecetaService {
 
 
   // Actualizar una receta existente con ingredientes + cantidad
-  async update(id: number, updateRecetaDto: any) {
+  async update(id_receta: number, updateRecetaDto: any) {
     const receta = await this.recetaRepository.findOne({
-      where: { id_receta: id },
+      where: { id_receta: id_receta },
       relations: ['recetaIngredientes'],
     });
 
     if (!receta) {
-      throw new NotFoundException(`Receta con id ${id} no encontrada`);
+      throw new NotFoundException(`Receta con id ${id_receta} no encontrada`);
     }
 
     // Actualizamos los campos básicos
@@ -124,7 +124,7 @@ export class RecetaService {
     receta.pais = { id_pais: updateRecetaDto.id_pais } as any;
 
     // Primero borramos los ingredientes anteriores
-    await this.recetaIngredienteRepository.delete({ receta: { id_receta: id } });
+    await this.recetaIngredienteRepository.delete({ receta: { id_receta: id_receta } });
 
     // Ahora recreamos los nuevos ingredientes recibidos
     const nuevosIngredientes = updateRecetaDto.ingredientes.map((ing) =>
@@ -140,5 +140,13 @@ export class RecetaService {
     // Guardamos todo
     return await this.recetaRepository.save(receta);
   }
+
+
+  async remove(id_receta: number){
+
+    await this.recetaRepository.delete({id_receta});
+    
+  }
+
 }
 

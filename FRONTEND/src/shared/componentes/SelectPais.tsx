@@ -20,12 +20,13 @@ export const SelectPais = ({ value, onChange }: SelectPaisProps) => {
   return (
     <TextField
       select
-      value={value}
+      value={value || ""}
       onChange={(e) => onChange(Number(e.target.value))}
       className="form-select"
       fullWidth
       label = "Pais"
     >
+
       {paises.map(p => (
         <MenuItem key={p.id_pais} value={p.id_pais}>
           {p.nombre}

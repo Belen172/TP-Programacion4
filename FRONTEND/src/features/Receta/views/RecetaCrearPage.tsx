@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { RecetaService } from "../services/RecetaService";
 import type { RecetaCrearDto } from "../types/RecetaTypes";
-import { TextField, Button, Box, Grid, Typography, Stack } from "@mui/material";
+import { TextField, Button, Box, Grid, Typography, Stack, Divider } from "@mui/material";
 import { SelectCategoria } from "src/shared/componentes/SelectCategoria";
 import { SelectPais } from "src/shared/componentes/SelectPais";
 import { ListaPasos } from "src/shared/componentes/ListaPasos";
@@ -49,15 +49,18 @@ export default function RecetaCrearPage() {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+    <>
+    <Typography variant="h4" gutterBottom>
         Crear Receta
-      </Typography>
+    </Typography>
+
+    <Box sx={{ p: 3 }}>
 
       <form onSubmit={handleOnSubmit}>
-        <Grid container spacing={2}>
+        <Grid container columnSpacing={5} rowSpacing={5}>
           <Grid size={4}>
-            <Stack spacing={2}>
+            <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
+            <Stack spacing={2} py={3}>
               <TextField
                 label="Nombre"
                 fullWidth
@@ -74,29 +77,41 @@ export default function RecetaCrearPage() {
                 value={Number(form.id_categoria)}
                 onChange={(id) => setForm({ ...form, id_categoria: id })}
               />
-
-              <SelectIngredientesConCantidad
-                value={form.ingredientes}
-                onChange={(nuevos) => setForm({ ...form, ingredientes: nuevos })}
-              />
-
-              <ListaPasos
-                label="Pasos de la receta"
-                value={form.pasos}
-                onChange={(nuevos) => setForm({ ...form, pasos: nuevos })}
-              />
             </Stack>
           </Grid>
 
-          <Grid size={8}>
-            <Grid>
+          <Divider orientation="vertical" flexItem/>
+
+          <Grid size={6}>
               <InputImagen
                 label="Imagen de la receta"
                 value={imagenSeleccionada}
                 onChange={(file) => setImagenSeleccionada(file)}
               />
-            </Grid>
           </Grid>
+
+          <Grid size={12}>
+            <Divider />
+          </Grid>
+
+          <Grid size={4}>
+              <SelectIngredientesConCantidad
+                value={form.ingredientes}
+                onChange={(nuevos) => setForm({ ...form, ingredientes: nuevos })}
+              />
+
+          </Grid>
+
+          <Divider orientation="vertical" flexItem/>
+
+          <Grid size={6}>
+              <ListaPasos
+                label="Pasos de la receta"
+                value={form.pasos}
+                onChange={(nuevos) => setForm({ ...form, pasos: nuevos })}
+              />
+          </Grid>
+
         </Grid>
 
         <Box
@@ -132,6 +147,7 @@ export default function RecetaCrearPage() {
         </Box>
       </form>
     </Box>
+  </>
   );
 }
 

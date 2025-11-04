@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, TextField, Typography, IconButton, MenuItem } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Box, Stack, TextField, Typography, IconButton, MenuItem, Button } from "@mui/material";
 import { IngredienteService } from "src/features/Ingrediente/services/IngredienteService";
+import { Add, Delete } from "@mui/icons-material";
 
 interface IngredienteCantidad {
   id_ingrediente: number;
@@ -38,49 +37,52 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <Typography variant="subtitle1" gutterBottom>Ingredientes y Cantidades</Typography>
-      {value.map((item, index) => (
-        <Grid container spacing={1} key={index} alignItems="center">
-          <Grid size={{xs:6}} >
+    <Box>
+      <Typography variant="subtitle1"><b><u>Ingredientes y cantidades</u></b></Typography>
+    
+      <Stack spacing={2} py={3}>
+        {value.map((item, index) => (
+          <Box key={index} display="flex" alignItems="center" gap={1}>
             <TextField
               select
+              label={`Ingrediente ${index + 1}`}
+              variant="outlined"
               fullWidth
-              label="Ingrediente"
               value={item.id_ingrediente}
-              onChange={(e) =>
-                handleCambiarValor(index, "id_ingrediente", Number(e.target.value))
-              }
+              onChange={(e) => handleCambiarValor(index, "id_ingrediente", Number(e.target.value))}
             >
-              {ingredientesDisponibles.map((ing) => (
+            {ingredientesDisponibles.map((ing) => (
                 <MenuItem key={ing.id_ingrediente} value={ing.id_ingrediente}>
                   {ing.nombre}
                 </MenuItem>
               ))}
             </TextField>
-          </Grid>
-          <Grid size={{xs:4}}>
+
             <TextField
-              type="number"
-              label="Cantidad"
+              label={`cantidad`}
+              type = "number"
+              variant="outlined"
               fullWidth
               value={item.cantidad}
-              onChange={(e) =>
-                handleCambiarValor(index, "cantidad", Number(e.target.value))
-              }
+              onChange={(e) => handleCambiarValor(index, "cantidad", Number(e.target.value))}
             />
-          </Grid>
-          <Grid size={{xs:2}}>
-            <IconButton color="error" onClick={() => handleEliminarFila(index)}>
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
 
-      <IconButton color="primary" onClick={handleAgregarFila}>
-        <AddCircleOutlineIcon />
-      </IconButton>
+            <IconButton color="error" onClick={() => handleEliminarFila(index)}>
+              <Delete />
+            </IconButton>
+          </Box>
+        ))}
+
+        <Button
+          variant="outlined"
+          startIcon={<Add />}
+          onClick={handleAgregarFila}
+          sx={{ alignSelf: "flex-start" }}
+        >
+          Agregar Ingrediente
+        </Button>
+      </Stack>
+
     </Box>
   );
 }

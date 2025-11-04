@@ -1,32 +1,25 @@
 import { useEffect, useState } from 'react'
 import { RecetaService } from '../services/RecetaService'
 import type { Receta } from "../types/RecetaTypes"
-import Box from '@mui/material/Box'
-import ButtonGroup from '@mui/material/ButtonGroup'
+import { Button, Typography,Box} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { AgGridReact } from 'ag-grid-react'
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import type { ColDef } from "ag-grid-community";
 import IconButton from "@mui/material/IconButton"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
 
 
+
 export default function RecetasPage() {
   const [recetas, setRecetas] = useState<Receta[]>([])
   const [colDefs] = useState<ColDef[]>([
-    { field: "id_receta", headerName: "ID", maxWidth: 80 },
     { field: "nombre", headerName: "Nombre" },
     { field: "categoria.nombre", headerName: "Categoría" },
     { field: "pais.nombre", headerName: "País" },
-    {field: "ingredientes",
-      headerName: "Ingredientes",
-      valueGetter: (params) =>
-        Array.isArray(params.data.ingredientes)
-          ? params.data.ingredientes.map((i: { nombre: string }) => i.nombre).join(", ")
-          : "-",
-    },
+
 
     {
       headerName: "Acciones",
@@ -91,26 +84,34 @@ export default function RecetasPage() {
   const gridStyle = {
     height: "auto",
     width: "100%",
+    borderRadius: "12px",
+    overflow: "hidden",
     "--ag-row-height": "45px",
-    "--ag-header-height": "40px",
+    "--ag-header-height": "40px"
   };
 
   return (
     <>
-      <Box sx={{ width: "100%", mb: 2 }}>
-        <ButtonGroup variant="outlined">
-          <button onClick={() => navigate("crear")}>Crear</button>
-        </ButtonGroup>
-      </Box>
+      <Typography variant='h4'>Recetas</Typography>
 
-      <h2>Recetas</h2>
+        <Box py={3}>
+            <Button
+            variant="contained"
+            onClick={() => navigate("crear")}
+            sx={{ width: "50%", maxWidth: 150 }}
+          >
+            Crear Receta
+          </Button>
 
-      <div className="ag-theme-alpine" style={gridStyle}>
+        </Box>
+
+      <div className="ag-theme-quartz" style={gridStyle}>
         <AgGridReact
           rowData={recetas}
           columnDefs={colDefs}
           rowSelection="single"
           domLayout="autoHeight"
+          theme="legacy"
           onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>

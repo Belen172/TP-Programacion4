@@ -29,6 +29,10 @@ useEffect(() => {
   };
 
   return (
+
+    <>
+    <Typography variant="subtitle1"> <b><u>{label}</u></b></Typography>
+
     <Box
       display="flex"
       flexDirection="column"
@@ -36,7 +40,6 @@ useEffect(() => {
       textAlign="center"
       width="100%"
     >
-      <Typography variant="subtitle1" gutterBottom>{label}</Typography>
 
       <input
         type="file"
@@ -74,5 +77,7 @@ useEffect(() => {
         {value ? "Cambiar imagen" : "Seleccionar imagen"}
       </Button>
     </Box>
+
+    </>
   );
 };
