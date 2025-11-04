@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Stack, TextField, Typography, IconButton, MenuItem, Button } from "@mui/material";
+import {Box,Stack,TextField,Typography,IconButton,Button,Autocomplete} from "@mui/material";
 import { IngredienteService } from "src/features/Ingrediente/services/IngredienteService";
 import { Add, Delete } from "@mui/icons-material";
 
@@ -14,10 +14,14 @@ interface Props {
 }
 
 export function SelectIngredientesConCantidad({ value, onChange }: Props) {
-  const [ingredientesDisponibles, setIngredientesDisponibles] = useState<{ id_ingrediente: number; nombre: string }[]>([]);
+  const [ingredientesDisponibles, setIngredientesDisponibles] = useState<
+    { id_ingrediente: number; nombre: string }[]
+  >([]);
 
   useEffect(() => {
-    IngredienteService.obtenerIngredientes().then(setIngredientesDisponibles);
+    IngredienteService.obtenerIngredientes()
+      .then(setIngredientesDisponibles)
+      .catch(console.error);
   }, []);
 
   const handleAgregarFila = () => {
@@ -25,11 +29,14 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
   };
 
   const handleEliminarFila = (index: number) => {
-    const nuevos = value.filter((_, i) => i !== index);
-    onChange(nuevos);
+    onChange(value.filter((_, i) => i !== index));
   };
 
-  const handleCambiarValor = (index: number, campo: string, nuevoValor: any) => {
+  const handleCambiarValor = (
+    index: number,
+    campo: keyof IngredienteCantidad,
+    nuevoValor: any
+  ) => {
     const nuevos = value.map((item, i) =>
       i === index ? { ...item, [campo]: nuevoValor } : item
     );
@@ -38,40 +45,68 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
 
   return (
     <Box>
-      <Typography variant="subtitle1"><b><u>Ingredientes y cantidades</u></b></Typography>
-    
+      <Typography variant="subtitle1">
+        <b><u>Ingredientes y cantidades</u></b>
+      </Typography>
+
       <Stack spacing={2} py={3}>
-        {value.map((item, index) => (
-          <Box key={index} display="flex" alignItems="center" gap={1}>
-            <TextField
-              select
-              label={`Ingrediente ${index + 1}`}
-              variant="outlined"
-              fullWidth
-              value={item.id_ingrediente}
-              onChange={(e) => handleCambiarValor(index, "id_ingrediente", Number(e.target.value))}
-            >
-            {ingredientesDisponibles.map((ing) => (
-                <MenuItem key={ing.id_ingrediente} value={ing.id_ingrediente}>
-                  {ing.nombre}
-                </MenuItem>
-              ))}
-            </TextField>
+        {value.map((item, index) => {
+          const seleccionado =
+            ingredientesDisponibles.find(
+              (ing) => ing.id_ingrediente === item.id_ingrediente
+            ) || null;
 
-            <TextField
-              label={`cantidad`}
-              type = "number"
-              variant="outlined"
-              fullWidth
-              value={item.cantidad}
-              onChange={(e) => handleCambiarValor(index, "cantidad", Number(e.target.value))}
-            />
+          return (
+            <Box key={index} display="flex" alignItems="center" gap={1}>
 
-            <IconButton color="error" onClick={() => handleEliminarFila(index)}>
-              <Delete />
-            </IconButton>
-          </Box>
-        ))}
+            <Box flex={2}>
+              <Autocomplete
+                options={ingredientesDisponibles}
+                getOptionLabel={(option) => option.nombre}
+                value={seleccionado}
+                onChange={(_, newValue) =>
+                  handleCambiarValor(
+                    index,
+                    "id_ingrediente",
+                    newValue ? newValue.id_ingrediente : 0
+                  )
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.id_ingrediente === value.id_ingrediente
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={`Ingrediente ${index + 1}`}
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+                noOptionsText="No hay ingredientes"
+              />
+              </Box>
+
+              <Box flex={1}>
+              <TextField
+                label="Cantidad"
+                type="number"
+                variant="outlined"
+                fullWidth
+                value={item.cantidad}
+                onChange={(e) =>
+                  handleCambiarValor(index, "cantidad", Number(e.target.value))
+                }
+              />
+              </Box>
+
+
+              <IconButton color="error" onClick={() => handleEliminarFila(index)}>
+                <Delete />
+              </IconButton>
+            </Box>
+          );
+        })}
+
 
         <Button
           variant="outlined"
@@ -82,7 +117,6 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
           Agregar Ingrediente
         </Button>
       </Stack>
-
     </Box>
   );
 }

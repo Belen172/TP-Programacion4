@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, Autocomplete } from "@mui/material";
 import type { Categoria } from "src/features/Categoria/types/CategoriaTypes";
 
 interface SelectCategoriaProps {
-  value: number | "";                     // el ID seleccionado (si estás editando)
-  onChange: (id: number) => void;         // se ejecuta cuando cambia
+  value: number | "";                
+  onChange: (id: number) => void;    
 }
 
 export const SelectCategoria = ({ value, onChange }: SelectCategoriaProps) => {
@@ -17,22 +17,30 @@ export const SelectCategoria = ({ value, onChange }: SelectCategoriaProps) => {
       .catch(console.error);
   }, []);
 
-  return (
-    <TextField
-      select
-      value={value || ""}
-      onChange={(e) => onChange(Number(e.target.value))}
-      className="form-select"
-      fullWidth
-      label = "Categoria"
-    >
+    const categoriaSeleccionada =
+    categorias.find((c) => c.id_categoria === value) || null;
 
-      {categorias.map(p => (
-        <MenuItem key={p.id_categoria} value={p.id_categoria}>
-          {p.nombre}
-        </ MenuItem>
-      ))}
-    </TextField>
+  return (
+ <Autocomplete
+      options={categorias}
+      getOptionLabel={(option) => option.nombre}
+      value={categoriaSeleccionada}
+      onChange={(_, newValue) => {
+        onChange(newValue ? newValue.id_categoria : 0);
+      }}
+      isOptionEqualToValue={(option, value) =>
+        option.id_categoria === value.id_categoria
+      }
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Categoría"
+          fullWidth
+          variant="outlined"
+        />
+      )}
+      noOptionsText="No hay categorías"
+    />
 
   );
 };
