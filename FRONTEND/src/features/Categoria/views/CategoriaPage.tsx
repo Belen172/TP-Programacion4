@@ -1,15 +1,16 @@
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState } from 'react'
 import { CategoriaService } from "../services/CategoriaService"
 import type { Categoria } from "../types/CategoriaTypes"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import ButtonGroup from "@mui/material/ButtonGroup"
+import { Button, Typography, Box } from '@mui/material'
 import { useNavigate } from "react-router-dom"
 import { AgGridReact } from "ag-grid-react"
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import type { ColDef } from "ag-grid-community"
 import IconButton from "@mui/material/IconButton"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
+
 
 export default function CategoriaPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
@@ -34,14 +35,14 @@ export default function CategoriaPage() {
           <IconButton
             color="primary"
             onClick={() => navigate(`/admin/categorias/editar?id=${params.data.id_categoria}`)}
-            title="Editar Categoría"
+            title="Editar categoría"
           >
             <EditIcon fontSize="small"/>
           </IconButton>
           <IconButton
             color="error"
             onClick={() => handleEliminar(params.data.id_categoria)}
-            title="Eliminar Categoría"
+            title="Eliminar categoría"
           >
             <DeleteIcon fontSize="small"/>
           </IconButton>
@@ -53,20 +54,20 @@ export default function CategoriaPage() {
   ])
 
   const navigate = useNavigate()
-    
-    async function handleEliminar(id: number) {
-      if (confirm("¿Seguro que querés eliminar esta Categoría?")) {
-        try {
-          await CategoriaService.eliminarCategoria(id)
-          alert("Categoría eliminada correctamente")
-          setCategorias((prev) => prev.filter((r) => r.id_categoria !== id))
-        } catch (error) {
-          console.error("Error al eliminar Categoría:", error)
-          alert("Ocurrió un error al eliminar la Categoría")
-        }
+
+  async function handleEliminar(id: number) {
+    if (confirm("¿Seguro que querés eliminar esta categoría?")) {
+      try {
+        await CategoriaService.eliminarCategoria(id)
+        alert("Categoría eliminada correctamente")
+        setCategorias((prev) => prev.filter((r) => r.id_categoria !== id))
+      } catch (error) {
+        console.error("Error al eliminar categoría:", error)
+        alert("Ocurrió un error al eliminar la categoría")
       }
     }
-  
+  }
+
   useEffect(() => {
     async function fetchCategorias() {
       const resultado = await CategoriaService.obtenerCategorias()
@@ -74,35 +75,41 @@ export default function CategoriaPage() {
     }
     fetchCategorias()
   }, [])
-  
-  const rowSelection: "single" | "multiple" = "single";
 
   const gridStyle = {
     height: "auto",
     width: "100%",
+    borderRadius: "12px",
+    overflow: "hidden",
     "--ag-row-height": "45px",
     "--ag-header-height": "40px",
   };
 
   return (
     <>
-      <Box sx={{ width: "100%", mb: 2 }}>
-        <ButtonGroup variant="outlined">
-          <button onClick={() => navigate("crear")}>Crear</button>
-        </ButtonGroup>
+      <Typography variant='h4'>Categorías</Typography>
+
+      <Box py={3}>
+        <Button
+          variant="contained"
+          onClick={() => navigate("crear")}
+          sx={{ width: "50%", maxWidth: 150 }}
+        >
+          Crear Categoría
+        </Button>
       </Box>
 
-      <h2>Categorías</h2>
-
-      <div className="ag-theme-alpine" style={gridStyle}>
+      <div className="ag-theme-quartz" style={gridStyle}>
         <AgGridReact
           rowData={categorias}
           columnDefs={colDefs}
           rowSelection="single"
           domLayout="autoHeight"
+          theme="legacy"
           onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>
     </>
   )
 }
+
