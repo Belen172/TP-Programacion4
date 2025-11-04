@@ -4,12 +4,15 @@ import { PaisService } from "../services/PaisService"
 import type { CrearPaisDto } from "../types/PaisTypes"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+// Importamos useNavigate para la redirección
+import { useNavigate } from "react-router-dom" 
 
 const estadoInicial: CrearPaisDto = { nombre: "" }
 
 export default function PaisCrearPage() {
   const [form, setForm] = useState<CrearPaisDto>(estadoInicial)
   const [cargando, setCargando] = useState(false)
+  const navigate = useNavigate() // Inicializamos navigate
 
   function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
@@ -22,9 +25,13 @@ export default function PaisCrearPage() {
       setCargando(true)
       await PaisService.crearPais(form)
       alert("País creado correctamente")
-      setForm(estadoInicial)
+
+      // >>> AQUI ESTA LA NAVEGACION <<<
+      navigate("/admin/paises") // Redirige a la página de listado
+
     } catch (error) {
       console.error("Error al crear el país:", error)
+      alert("Ocurrió un error al crear el país.") // Buena práctica añadir un alert de error
     } finally {
       setCargando(false)
     }

@@ -4,6 +4,8 @@ import { IngredienteService } from "../services/IngredienteService"
 import type { CrearIngredienteDto } from "../types/IngredienteTypes"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+// Importamos useNavigate para la redirección
+import { useNavigate } from "react-router-dom" 
 
 const estadoInicial: CrearIngredienteDto = {
   nombre: "",
@@ -13,6 +15,7 @@ const estadoInicial: CrearIngredienteDto = {
 export default function IngredienteCrearPage() {
   const [form, setForm] = useState<CrearIngredienteDto>(estadoInicial)
   const [cargando, setCargando] = useState(false)
+  const navigate = useNavigate() // Inicializamos navigate
 
   function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
@@ -25,9 +28,13 @@ export default function IngredienteCrearPage() {
       setCargando(true)
       await IngredienteService.crearIngrediente(form)
       alert("Ingrediente creado correctamente")
-      setForm(estadoInicial)
+      
+      // >>> AQUI ESTA LA NAVEGACION <<<
+      navigate("/admin/ingredientes") // Redirige a la página de listado
+
     } catch (error) {
       console.error("Error al crear el ingrediente:", error)
+      alert("Ocurrió un error al crear el ingrediente.") // Buena práctica añadir un alert de error
     } finally {
       setCargando(false)
     }
@@ -73,3 +80,4 @@ export default function IngredienteCrearPage() {
     </div>
   )
 }
+
