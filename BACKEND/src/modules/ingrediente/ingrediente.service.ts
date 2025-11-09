@@ -26,12 +26,12 @@ export class IngredienteService {
         if(nombreExistente){
           throw new ConflictException ("Ingrediente ya registrado"); }
 
-        const nuevoPais = this.ingredienteRepository.create({
+        const nuevoIngrediente = this.ingredienteRepository.create({
           nombre,
           unidad_medida
         });
       
-        return this.ingredienteRepository.save(nuevoPais);
+        return this.ingredienteRepository.save(nuevoIngrediente);
 
   }
 

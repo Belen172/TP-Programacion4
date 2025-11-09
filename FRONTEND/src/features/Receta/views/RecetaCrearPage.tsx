@@ -50,104 +50,104 @@ export default function RecetaCrearPage() {
 
   return (
     <>
-    <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom>
         Crear Receta
-    </Typography>
+      </Typography>
 
-    <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3 }}>
 
-      <form onSubmit={handleOnSubmit}>
-        <Grid container columnSpacing={5} rowSpacing={5}>
-          <Grid size={4}>
-            <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
-            <Stack spacing={2} py={3}>
-              <TextField
-                label="Nombre"
-                fullWidth
-                value={form.nombre}
-                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-              />
+        <form onSubmit={handleOnSubmit}>
+          <Grid container columnSpacing={5} rowSpacing={5}>
+            <Grid size={4}>
+              <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
+              <Stack spacing={2} py={3}>
+                <TextField
+                  label="Nombre"
+                  fullWidth
+                  value={form.nombre}
+                  onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                />
 
-              <SelectPais
-                value={Number(form.id_pais)}
-                onChange={(id) => setForm({ ...form, id_pais: id })}
-              />
+                <SelectPais
+                  value={Number(form.id_pais)}
+                  onChange={(id) => setForm({ ...form, id_pais: id })}
+                />
 
-              <SelectCategoria
-                value={Number(form.id_categoria)}
-                onChange={(id) => setForm({ ...form, id_categoria: id })}
-              />
-            </Stack>
-          </Grid>
+                <SelectCategoria
+                  value={Number(form.id_categoria)}
+                  onChange={(id) => setForm({ ...form, id_categoria: id })}
+                />
+              </Stack>
+            </Grid>
 
-          <Divider orientation="vertical" flexItem/>
+            <Divider orientation="vertical" flexItem />
 
-          <Grid size={6}>
+            <Grid size={6}>
               <InputImagen
                 label="Imagen de la receta"
                 value={imagenSeleccionada}
                 onChange={(file) => setImagenSeleccionada(file)}
               />
-          </Grid>
+            </Grid>
 
-          <Grid size={12}>
-            <Divider />
-          </Grid>
+            <Grid size={12}>
+              <Divider />
+            </Grid>
 
-          <Grid size={4}>
+            <Grid size={4}>
               <SelectIngredientesConCantidad
                 value={form.ingredientes}
                 onChange={(nuevos) => setForm({ ...form, ingredientes: nuevos })}
               />
 
-          </Grid>
+            </Grid>
 
-          <Divider orientation="vertical" flexItem/>
+            <Divider orientation="vertical" flexItem />
 
-          <Grid size={6}>
+            <Grid size={6}>
               <ListaPasos
                 label="Pasos de la receta"
                 value={form.pasos}
                 onChange={(nuevos) => setForm({ ...form, pasos: nuevos })}
               />
+            </Grid>
+
           </Grid>
 
-        </Grid>
-
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            backgroundColor: "rgb(255, 255, 255)",
-            py: 1,
-            gap: 2,
-            boxShadow: "0 -2px 6px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => navigate("/admin/recetas")}
-            sx={{ width: "50%", maxWidth: 320 }}
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: "rgb(255, 255, 255)",
+              py: 1,
+              gap: 2,
+              boxShadow: "0 -2px 6px rgba(0,0,0,0.1)",
+            }}
           >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ width: "50%", maxWidth: 320 }}
-          >
-            Guardar Cambios
-          </Button>
-        </Box>
-      </form>
-    </Box>
-  </>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => navigate("/admin/recetas")}
+              sx={{ width: "50%", maxWidth: 320 }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ width: "50%", maxWidth: 320 }}
+            >
+              Guardar Cambios
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </>
   );
 }
 

@@ -8,39 +8,39 @@ import { UpdateRecetaDto } from './dto/update-receta.dto';
 
 @Controller('receta')
 export class RecetaController {
-  constructor(private readonly recetaService: RecetaService) {}
+  constructor(private readonly recetaService: RecetaService) { }
 
 
-//Create receta a partir de FromData y no aplication/json.
-@Post()
-@UseInterceptors(FileInterceptor('foto', {
-  storage: diskStorage({
-    destination: './fotosRecetas/',
-    filename: (req, file, cb) => {
-      const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      const ext = extname(file.originalname);
-      cb(null, `${uniqueName}${ext}`);
-    },
-  }),
-}))
-async create(
-  @UploadedFile() file: Express.Multer.File,
-  @Body() body,
-) {
-  const fotoPath = file ? `/fotosRecetas/${file.filename}` : null;
+  //Create receta a partir de FromData y no aplication/json.
+  @Post()
+  @UseInterceptors(FileInterceptor('foto', {
+    storage: diskStorage({
+      destination: './fotosRecetas/',
+      filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const ext = extname(file.originalname);
+        cb(null, `${uniqueName}${ext}`);
+      },
+    }),
+  }))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body,
+  ) {
+    const fotoPath = file ? `/fotosRecetas/${file.filename}` : null;
 
-  // convertir campos a sus tipos reales
-  const dto = {
-    nombre: String(body.nombre),
-    id_categoria: Number(body.id_categoria),
-    id_pais: Number(body.id_pais),
-    pasos: body.pasos ? JSON.parse(body.pasos) : [],
-    ingredientes: body.ingredientes ? JSON.parse(body.ingredientes) : [],
-    foto: fotoPath,
-  } as CreateRecetaDto;
+    // convertir campos a sus tipos reales
+    const dto = {
+      nombre: String(body.nombre),
+      id_categoria: Number(body.id_categoria),
+      id_pais: Number(body.id_pais),
+      pasos: body.pasos ? JSON.parse(body.pasos) : [],
+      ingredientes: body.ingredientes ? JSON.parse(body.ingredientes) : [],
+      foto: fotoPath,
+    } as CreateRecetaDto;
 
-  return this.recetaService.create(dto);
-}
+    return this.recetaService.create(dto);
+  }
 
 
   @Get()
@@ -50,43 +50,43 @@ async create(
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-  return this.recetaService.findOne(+id);
+    return this.recetaService.findOne(+id);
   }
 
   @Patch(':id')
-@UseInterceptors(FileInterceptor('foto', {
-  storage: diskStorage({
-    destination: './fotosRecetas/',
-    filename: (req, file, cb) => {
-      const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      const ext = extname(file.originalname);
-      cb(null, `${uniqueName}${ext}`);
-    },
-  }),
-}))
-async update(
-  @Param('id') id: number,
-  @UploadedFile() file: Express.Multer.File,
-  @Body() body
-) {
-  const dto = {
-    nombre: String(body.nombre),
-    id_categoria: Number(body.id_categoria),
-    id_pais: Number(body.id_pais),
-    pasos: JSON.parse(body.pasos),
-    ingredientes: JSON.parse(body.ingredientes),
-    foto: file
-      ? `/fotosRecetas/${file.filename}`
-      : body.fotoActual || null, // usa la existente si no hay nueva
-  };
+  @UseInterceptors(FileInterceptor('foto', {
+    storage: diskStorage({
+      destination: './fotosRecetas/',
+      filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const ext = extname(file.originalname);
+        cb(null, `${uniqueName}${ext}`);
+      },
+    }),
+  }))
+  async update(
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body
+  ) {
+    const dto = {
+      nombre: String(body.nombre),
+      id_categoria: Number(body.id_categoria),
+      id_pais: Number(body.id_pais),
+      pasos: JSON.parse(body.pasos),
+      ingredientes: JSON.parse(body.ingredientes),
+      foto: file
+        ? `/fotosRecetas/${file.filename}`
+        : body.fotoActual || null, // usa la existente si no hay nueva
+    };
 
-  console.log(dto)
+    console.log(dto)
 
-  return this.recetaService.update(id, dto);
-}
+    return this.recetaService.update(id, dto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-  return this.recetaService.remove(+id);
+    return this.recetaService.remove(+id);
   }
 }

@@ -26,11 +26,12 @@ export default function RecetaEditarPage() {
       try {
         const data = await RecetaService.obtenerRecetaPorId(Number(idReceta));
 
+
         // Transformamos los datos al formato del formulario
         const recetaFormateada: RecetaActualizarDto = {
           nombre: data.nombre,
           pasos: data.pasos || [],
-          foto: data.foto ? `${API_URL}${data.foto}` : "",
+          foto: data.foto ? data.foto : "",
           id_categoria: data.categoria?.id_categoria || 0,
           id_pais: data.pais?.id_pais || 0,
           ingredientes: data.ingredientes?.map((i: any) => ({
@@ -38,6 +39,7 @@ export default function RecetaEditarPage() {
             cantidad: i.cantidad,
           })) || [],
         };
+
 
         setReceta(recetaFormateada);
       } catch (error) {
@@ -63,11 +65,11 @@ export default function RecetaEditarPage() {
       formData.append("ingredientes", JSON.stringify(receta.ingredientes));
 
 
-    if (imagenSeleccionada) {
-      formData.append("foto", imagenSeleccionada);
-    } else if (receta.foto) {
-      formData.append("fotoActual", receta.foto);
-    }
+      if (imagenSeleccionada) {
+        formData.append("foto", imagenSeleccionada);
+      } else if (receta.foto) {
+        formData.append("fotoActual", receta.foto);
+      }
 
       await RecetaService.actualizarReceta(Number(idReceta), formData);
       alert("Receta actualizada correctamente");
@@ -87,38 +89,38 @@ export default function RecetaEditarPage() {
         Editar Receta
       </Typography>
 
-    <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3 }}>
 
-      <Grid container columnSpacing={5} rowSpacing={5}>
-        <Grid size={4}>
-          <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
-          <Stack spacing={2} py={3}>
-          <TextField
-            label="Nombre"
-            fullWidth
-            value={receta.nombre}
-            onChange={(e) => setReceta({ ...receta, nombre: e.target.value })}
-          />
+        <Grid container columnSpacing={5} rowSpacing={5}>
+          <Grid size={4}>
+            <Typography variant="subtitle1" ><b><u>Información General</u></b></Typography>
+            <Stack spacing={2} py={3}>
+              <TextField
+                label="Nombre"
+                fullWidth
+                value={receta.nombre}
+                onChange={(e) => setReceta({ ...receta, nombre: e.target.value })}
+              />
 
-          <SelectPais
-            value={Number(receta.id_pais)}
-            onChange={(id) => setReceta({ ...receta, id_pais: id })}
-          />
+              <SelectPais
+                value={Number(receta.id_pais)}
+                onChange={(id) => setReceta({ ...receta, id_pais: id })}
+              />
 
-          <SelectCategoria
-            value={Number(receta.id_categoria)}
-            onChange={(id) => setReceta({ ...receta, id_categoria: id })}
-          />
+              <SelectCategoria
+                value={Number(receta.id_categoria)}
+                onChange={(id) => setReceta({ ...receta, id_categoria: id })}
+              />
 
-          </Stack>
+            </Stack>
           </Grid>
 
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
 
           <Grid size={6}>
             <InputImagen
               label="Imagen de la receta"
-              value={imagenSeleccionada || receta.foto}
+              value={imagenSeleccionada || `${API_URL}${receta.foto}`}
               onChange={(file) => setImagenSeleccionada(file)}
             />
           </Grid>
@@ -128,21 +130,21 @@ export default function RecetaEditarPage() {
           </Grid>
 
           <Grid size={4}>
-          <SelectIngredientesConCantidad
-            value={receta.ingredientes || []}
-            onChange={(nuevos) => setReceta({ ...receta, ingredientes: nuevos })}
-          />
+            <SelectIngredientesConCantidad
+              value={receta.ingredientes || []}
+              onChange={(nuevos) => setReceta({ ...receta, ingredientes: nuevos })}
+            />
           </Grid>
 
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
 
-        <Grid size={6}>
-          <ListaPasos
-            label="Pasos de la receta"
-            value={receta.pasos || []}
-            onChange={(nuevos) => setReceta({ ...receta, pasos: nuevos })}
-          />
-        </Grid>
+          <Grid size={6}>
+            <ListaPasos
+              label="Pasos de la receta"
+              value={receta.pasos || []}
+              onChange={(nuevos) => setReceta({ ...receta, pasos: nuevos })}
+            />
+          </Grid>
 
         </Grid>
 
@@ -177,7 +179,7 @@ export default function RecetaEditarPage() {
             Guardar Cambios
           </Button>
         </Box>
-    </Box>
+      </Box>
 
     </>
   );
