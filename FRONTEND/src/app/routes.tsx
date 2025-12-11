@@ -23,6 +23,8 @@ import PaisPage from "../features/Pais/views/PaisPage.tsx"
 import PaisCrearPage from "../features/Pais/views/PaisCrearPage.tsx"
 import PaisEditarPage from "../features/Pais/views/PaisEditarPage.tsx"
 import PaisEliminarPage from "../features/Pais/views/PaisEliminarPage.tsx"
+// Página de Estadísticas
+import EstadisticasPage from "../features/Estadisticas/views/EstadisticasPage.tsx"
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +58,9 @@ export const router = createBrowserRouter([
           { path: "ingredientes/crear", element: <IngredienteCrearPage /> },
           { path: "ingredientes/editar", element: <IngredienteEditarPage /> },
           { path: "ingredientes/eliminar", element: <IngredienteEliminarPage /> },
+
+          // RUTA DE ESTADÍSTICAS
+          { path: "estadisticas", element: <EstadisticasPage />},
           
           // Mensaje si alguien ingresa una URL inexistente
           {

@@ -8,11 +8,11 @@ export class RecetaIngrediente {
   id: number;
 
   @ManyToOne(() => Receta, receta => receta.recetaIngredientes, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'recetaId' }) // 👈 nombre de la FK en la tabla
+  @JoinColumn({ name: 'recetaId' }) //  nombre de la FK en la tabla
   receta: Receta;
 
   @ManyToOne(() => Ingrediente, ingrediente => ingrediente.recetaIngredientes, { eager: true })
-  @JoinColumn({ name: 'ingredienteId' }) // 👈 nombre de la FK en la tabla
+  @JoinColumn({ name: 'ingredienteId' }) //  nombre de la FK en la tabla
   ingrediente: Ingrediente;
 
   @Column('decimal', { precision: 10, scale: 2 })

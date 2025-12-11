@@ -21,7 +21,7 @@ export default function SidenavLinks({ handleClick }: Props) {
 
   return (
     <Box>
-      {/* 🌿 LINK PRINCIPAL */}
+      {/* LINK PRINCIPAL */}
       <List>
         <ListItemButton
           component={RouterLink}
@@ -48,7 +48,7 @@ export default function SidenavLinks({ handleClick }: Props) {
 
       <Divider sx={{ my: 1 }} />
 
-      {/* 🌿 SECCIÓN ADMIN */}
+      {/* SECCIÓN ADMIN */}
       <List>
         <ListItemButton
           onClick={handleToggleAdmin}
@@ -77,6 +77,7 @@ export default function SidenavLinks({ handleClick }: Props) {
               { text: "Países", path: "/admin/paises" },
               { text: "Categorías", path: "/admin/categorias" },
               { text: "Ingredientes", path: "/admin/ingredientes" },
+              { text: "Estadísticas", path: "/admin/estadisticas" },
             ].map((item) => (
               <ListItemButton
                 key={item.text}

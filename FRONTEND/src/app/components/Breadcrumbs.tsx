@@ -23,6 +23,7 @@ const breadcrumbNameMap: Record<string, string> = {
   "/admin/ingredientes/crear": "Crear",
   "/admin/ingredientes/editar": "Editar",
   "/admin/ingredientes/eliminar": "Eliminar",
+  "/admin/estadisticas": "Estadísticas",
 };
 
 export default function Breadcrumbs() {

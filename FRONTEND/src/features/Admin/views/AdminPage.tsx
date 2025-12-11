@@ -12,6 +12,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import CategoryIcon from "@mui/icons-material/Category";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function AdminPage() {
   const location = useLocation();
@@ -44,6 +45,12 @@ export default function AdminPage() {
       descripcion: "Mantené actualizado el listado de ingredientes",
       icono: <SoupKitchenIcon sx={{ fontSize: 50, color: "#ad1457" }} />,
       ruta: "ingredientes",
+    },
+    {
+      titulo: "Estadísticas",
+      descripcion: "Visualizá estadísticas de uso y datos relevantes",
+      icono: <BarChartIcon sx={{ fontSize: 50, color: "#6a1b9a" }} />,
+      ruta: "estadisticas",
     },
   ];
 

@@ -105,5 +105,18 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        '@media print': {
+          '.no-print': {
+            display: 'none !important',
+          },
+          body: {
+            backgroundColor: '#ffffff',
+            printColorAdjust: 'exact',
+          }
+        }
+      }
+    }
   },
 });
