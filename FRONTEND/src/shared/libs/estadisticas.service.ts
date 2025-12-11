@@ -15,7 +15,6 @@ export type IngredienteMasUsado = {
   cantidad: number;
 };
 
-// 👇 AGREGAR /api delante igual que en RecetaService
 export async function getRecetasPorPais(): Promise<RecetasPorPais[]> {
   const res = await api.get("/api/estadisticas/recetas-por-pais");
   return res.data;
