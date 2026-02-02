@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
 
 
+
 export default function CategoriaPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [colDefs] = useState<ColDef[]>([
@@ -24,13 +25,7 @@ export default function CategoriaPage() {
       field: "acciones",
       cellRenderer: (params: any) => (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "left",
-            gap: "0.5rem",
-            height: "100%",
-          }}
+        className="accionesColumnItem"
         >
           <IconButton
             color="primary"
@@ -76,14 +71,7 @@ export default function CategoriaPage() {
     fetchCategorias()
   }, [])
 
-  const gridStyle = {
-    height: "auto",
-    width: "100%",
-    borderRadius: "12px",
-    overflow: "hidden",
-    "--ag-row-height": "45px",
-    "--ag-header-height": "40px",
-  };
+
 
   return (
     <>
@@ -99,7 +87,7 @@ export default function CategoriaPage() {
         </Button>
       </Box>
 
-      <div className="ag-theme-quartz" style={gridStyle}>
+      <div className="ag-theme-quartz">
         <AgGridReact
           rowData={categorias}
           columnDefs={colDefs}

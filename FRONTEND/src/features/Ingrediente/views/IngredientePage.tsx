@@ -10,6 +10,8 @@ import type { ColDef } from "ag-grid-community"
 import IconButton from "@mui/material/IconButton"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
+import 'src/shared/utils/styles.css'
+
 
 
 export default function IngredientePage() {
@@ -24,13 +26,7 @@ export default function IngredientePage() {
       field: "acciones",
       cellRenderer: (params: any) => (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "left",
-            gap: "0.5rem",
-            height: "100%",
-          }}
+        className="accionesColumnItem"
         >
           <IconButton
             color="primary"

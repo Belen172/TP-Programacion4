@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Receta } from '../receta/entities/receta.entity';
 import { RecetaIngrediente } from '../receta/entities/receta_ingrediente';
 import { Repository } from 'typeorm';
+import { Rating } from './entities/rating.entity';
+import { RecetaService } from '../receta/receta.service';
 
 @Injectable()
 export class EstadisticasService {
@@ -12,6 +14,9 @@ export class EstadisticasService {
 
     @InjectRepository(RecetaIngrediente)
     private readonly recetaIngredienteRepository: Repository<RecetaIngrediente>,
+
+   @InjectRepository(Rating)
+   private readonly ratingRepository: Repository<Rating>
   ) {}
 
   // 1) Recetas por país
@@ -47,6 +52,22 @@ export class EstadisticasService {
       .orderBy('cantidad', 'DESC')
       .limit(5)
       .getRawMany();
+  }
+
+  async actualizarRating(recetaId: number){
+
+    const recetaRankeada = await this.ratingRepository.findOne({where:{recetaId : recetaId} })
+
+    if(!recetaRankeada){
+      const recetaNoRankeada = await this.recetaRepository.findOne({where:{id_receta : recetaId} })
+      const nuevoRating = await this.ratingRepository.create({
+        nombreReceta : recetaNoRankeada?.nombre,
+        recetaId : recetaId,
+        rating : 0
+      })
+      await this.ratingRepository.save(nuevoRating);
+    }
+    await this.ratingRepository.increment({ recetaId: recetaId }, 'rating', 1)
   }
 }
 

@@ -21,6 +21,7 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { RecetaService } from "../services/RecetaService";
 import { CategoriaService } from "../../Categoria/services/CategoriaService";
 import { PaisService } from "../../Pais/services/PaisService";
+import { actualizarRating } from "src/shared/libs/estadisticas.service";
 import type { Receta } from "../types/RecetaTypes";
 
 
@@ -47,6 +48,17 @@ export default function RecetasBuscarPage() {
     }
     cargar();
   }, []);
+
+  async function actualizarRatingUI(id: number){
+    try{
+      await actualizarRating(id)
+    }
+    catch(error){
+      console.log(error);
+    }
+    return;
+  }
+
 
   // Se aplican los filtros combinados
   const recetasFiltradas = recetas.filter((r) => {
@@ -197,7 +209,7 @@ export default function RecetasBuscarPage() {
               </CardContent>
 
               <CardActions>
-                <Button size="small" onClick={() => toggleExpand(receta.id_receta)}>
+                <Button size="small" onClick={() => {toggleExpand(receta.id_receta), actualizarRatingUI(receta.id_receta)}}>
                   {recetaExpandida === receta.id_receta
                     ? "Ocultar detalles"
                     : "Ver detalles"}

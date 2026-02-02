@@ -11,7 +11,6 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import PublicIcon from "@mui/icons-material/Public";
 import CategoryIcon from "@mui/icons-material/Category";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function AdminPage() {

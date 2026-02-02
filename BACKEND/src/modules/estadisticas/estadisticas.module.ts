@@ -7,6 +7,7 @@ import { Pais } from '../pais/entities/pais.entity';
 import { Categoria } from '../categoria/entities/categoria.entity';
 import { RecetaIngrediente } from '../receta/entities/receta_ingrediente';
 import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
+import { Rating } from './entities/rating.entity';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
       Categoria,
       RecetaIngrediente,
       Ingrediente,
+      Rating
     ]),
   ],
   controllers: [EstadisticasController],

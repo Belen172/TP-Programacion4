@@ -10,6 +10,7 @@ import type { ColDef } from "ag-grid-community";
 import IconButton from "@mui/material/IconButton"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
+import  'src/shared/utils/styles.css'
 
 
 
@@ -26,13 +27,7 @@ export default function RecetasPage() {
       field: "acciones",
       cellRenderer: (params: any) => (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "left",
-            gap: "0.5rem",
-            height: "100%",
-          }}
+        className="accionesColumnItem"
         >
           <IconButton
             color="primary"
@@ -81,14 +76,7 @@ export default function RecetasPage() {
 
 
 
-  const gridStyle = {
-    height: "auto",
-    width: "100%",
-    borderRadius: "12px",
-    overflow: "hidden",
-    "--ag-row-height": "45px",
-    "--ag-header-height": "40px"
-  };
+
 
   return (
     <>
@@ -105,7 +93,7 @@ export default function RecetasPage() {
 
         </Box>
 
-      <div className="ag-theme-quartz" style={gridStyle}>
+      <div className="ag-theme-quartz">
         <AgGridReact
           rowData={recetas}
           columnDefs={colDefs}

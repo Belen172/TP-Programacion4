@@ -21,7 +21,7 @@ import { EstadisticasModule } from './modules/estadisticas/estadisticas.module';
       username: process.env.DB_USERNAME, // usuario MySQL
       password: process.env.DB_PASSWORD, // password MySQL
       autoLoadEntities: true, // detecta automáticamente tus entidades
-      synchronize: false, // sincroniza el esquema de la base de datos (solo en desarrollo) 
+      synchronize: true, // sincroniza el esquema de la base de datos (solo en desarrollo) 
                           // SOLO en desarrollo, crea/actualiza tablas
     }),
     RecetaModule,

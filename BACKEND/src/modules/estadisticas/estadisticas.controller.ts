@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { EstadisticasService } from './estadisticas.service';
 
 @Controller('estadisticas')
@@ -19,4 +19,15 @@ export class EstadisticasController {
   ingredientesMasUsados() {
     return this.estadisticasService.ingredientesMasUsados();
   }
+
+ @Post('actualizarRating/:recetaId')
+ actualizarRating(@Param('recetaId') recetaId: number){
+  try{
+  this.estadisticasService.actualizarRating(recetaId)
+  }
+  catch(error){
+    console.log(error);
+  }
+ }
+
 }

@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Categoria } from '../../categoria/entities/categoria.entity';
 import { Pais } from '../../pais/entities/pais.entity';
 import { RecetaIngrediente } from './receta_ingrediente';
+import { Rating } from '../../estadisticas/entities/rating.entity';
+
 
 @Entity()
 export class Receta {
@@ -25,4 +27,8 @@ export class Receta {
 
   @OneToMany(() => RecetaIngrediente, (ri) => ri.receta, { cascade: true, eager: true })
   recetaIngredientes: RecetaIngrediente[];
+
+  @OneToOne(() => Rating, (rating) => rating.receta, { cascade: false })
+  rating: Rating;
+
 }

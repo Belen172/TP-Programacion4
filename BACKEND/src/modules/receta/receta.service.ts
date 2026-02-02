@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Receta } from './entities/receta.entity';
 import { Ingrediente } from '../ingrediente/entities/ingrediente.entity';
 import { RecetaIngrediente } from './entities/receta_ingrediente';
+import { Rating } from '../estadisticas/entities/rating.entity';
 
 @Injectable()
 export class RecetaService {
@@ -18,6 +19,10 @@ export class RecetaService {
 
     @InjectRepository(RecetaIngrediente)
     private readonly recetaIngredienteRepository: Repository<RecetaIngrediente>,
+
+   @InjectRepository(Rating)
+   private readonly ratingRepository: Repository<Rating> 
+
   ) {}
 
   // Crear una nueva receta con ingredientes + cantidad
@@ -45,11 +50,23 @@ export class RecetaService {
     // Guardamos los vínculos en la tabla intermedia
     await this.recetaIngredienteRepository.save(recetaIngredientes);
 
+    //Inicializamos Rating:
+    const rating = this.ratingRepository.create({
+      recetaId: recetaGuardada.id_receta,
+      nombreReceta: recetaGuardada.nombre,
+      rating: 0,
+    })
+
+    await this.ratingRepository.save(rating);
+
     // Devolvemos la receta completa con sus ingredientes
     return await this.recetaRepository.findOne({
       where: { id_receta: recetaGuardada.id_receta },
       relations: ['recetaIngredientes', 'categoria', 'pais'],
     });
+
+
+
   }
 
 

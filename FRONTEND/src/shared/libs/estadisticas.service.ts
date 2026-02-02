@@ -30,3 +30,13 @@ export async function getIngredientesMasUsados(): Promise<IngredienteMasUsado[]>
   return res.data;
 }
 
+  //Actualizar rating favoritos
+export async function actualizarRating(recetaId: number){
+    try{
+    await api.post(`/api/estadisticas/actualizarRating/${recetaId}`)
+    }catch(error){
+      console.log(error)
+    }
+    return;
+  }
+
