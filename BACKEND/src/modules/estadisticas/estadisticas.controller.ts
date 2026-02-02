@@ -20,14 +20,18 @@ export class EstadisticasController {
     return this.estadisticasService.ingredientesMasUsados();
   }
 
- @Post('actualizarRating/:recetaId')
- actualizarRating(@Param('recetaId') recetaId: number){
+   @Post('actualizarRating/:recetaId')
+  actualizarRating(@Param('recetaId') recetaId: number){
   try{
   this.estadisticasService.actualizarRating(recetaId)
   }
   catch(error){
     console.log(error);
   }
- }
+  }
 
-}
+  @Get('recetasPopulares')
+  recetasPopulares(){
+    return this.estadisticasService.recetasPopulares();
+  }
+} 

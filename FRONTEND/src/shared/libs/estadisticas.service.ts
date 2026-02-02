@@ -15,6 +15,11 @@ export type IngredienteMasUsado = {
   cantidad: number;
 };
 
+export type RecetasPopulares = {
+  nombreReceta : string;
+  rating : number;
+}
+
 export async function getRecetasPorPais(): Promise<RecetasPorPais[]> {
   const res = await api.get("/api/estadisticas/recetas-por-pais");
   return res.data;
@@ -38,5 +43,11 @@ export async function actualizarRating(recetaId: number){
       console.log(error)
     }
     return;
+  }
+
+  //Recetas populares
+  export async function getRecetasPopulares() : Promise<RecetasPopulares[]>{
+    const res = await api.get(`/api/estadisticas/recetasPopulares`);
+      return res.data;
   }
 

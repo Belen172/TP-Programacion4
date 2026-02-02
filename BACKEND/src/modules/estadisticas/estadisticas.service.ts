@@ -54,6 +54,7 @@ export class EstadisticasService {
       .getRawMany();
   }
 
+  //actualizar Rating de receta
   async actualizarRating(recetaId: number){
 
     const recetaRankeada = await this.ratingRepository.findOne({where:{recetaId : recetaId} })
@@ -68,6 +69,16 @@ export class EstadisticasService {
       await this.ratingRepository.save(nuevoRating);
     }
     await this.ratingRepository.increment({ recetaId: recetaId }, 'rating', 1)
+  }
+
+  //Recetas populares
+
+  async recetasPopulares(){
+    return this.ratingRepository
+      .createQueryBuilder('rating')
+      .orderBy('rating.rating','DESC')
+      .limit(3)
+      .getMany()
   }
 }
 

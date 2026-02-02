@@ -13,34 +13,41 @@ import {
   getRecetasPorPais,
   getRecetasPorCategoria,
   getIngredientesMasUsados,
+  getRecetasPopulares,
   type RecetasPorPais,
   type RecetasPorCategoria,
   type IngredienteMasUsado,
+  type RecetasPopulares,
 } from "../../../shared/libs/estadisticas.service";
 
 import { RecetasPorPais as CompPais } from "../componentes/RecetasPorPais";
 import { RecetasPorCategoria as CompCategoria } from "../componentes/RecetasPorCategoria";
 import { IngredientesMasUsados as CompIngredientes } from "../componentes/IngredientesMasUsados";
+import { RecetasPopularesGraph} from "../componentes/RecetasPopularesGraph";
 
 export default function EstadisticasPage() {
   const [porPais, setPorPais] = useState<RecetasPorPais[]>([]);
   const [porCategoria, setPorCategoria] = useState<RecetasPorCategoria[]>([]);
   const [topIngredientes, setTopIngredientes] = useState<IngredienteMasUsado[]>([]);
   const [totalRecetas, setTotalRecetas] = useState<number>(0);
+  const [recetasPopulares, setRecetasPopulares] = useState<RecetasPopulares[]>([]);
   
 
   useEffect(() => {
     const cargar = async () => {
       try {
-        const [paises, categorias, ingredientes] = await Promise.all([
+        const [paises, categorias, ingredientes, recetasPopulares] = await Promise.all([
           getRecetasPorPais(),
           getRecetasPorCategoria(),
           getIngredientesMasUsados(),
+          getRecetasPopulares(),
+          getRecetasPopulares()
         ]);
 
         setPorPais(paises);
         setPorCategoria(categorias);
         setTopIngredientes(ingredientes);
+        setRecetasPopulares(recetasPopulares);
 
         const total = paises.reduce(
           (acc, item) => acc + Number(item.cantidad),
@@ -145,6 +152,24 @@ export default function EstadisticasPage() {
                   data={porCategoria.map((c) => ({
                     label: c.categoria,
                     value: Number(c.cantidad),
+                  }))}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* GRÁFICO  - Recetas populares */}
+          <Grid size={{xs:12, md:6}}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Recetas Populares (Top 3)
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+
+                <RecetasPopularesGraph
+                  data={recetasPopulares.map((rp) => ({
+                    label: rp.nombreReceta,
                   }))}
                 />
               </CardContent>
