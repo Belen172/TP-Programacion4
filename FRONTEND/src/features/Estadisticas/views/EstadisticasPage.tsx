@@ -120,8 +120,28 @@ export default function EstadisticasPage() {
         </Card>
 
         <Grid container spacing={3}>
+          <Grid container>
+          <Grid container spacing={2} size={{xs:12, md:6}}>
+          {/* GRÁFICO  - Recetas populares */}
+            <Grid size={{xs:12, md:12}}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Recetas Populares (Top 3)
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+
+                <RecetasPopularesGraph
+                  data={recetasPopulares.map((rp) => ({
+                    label: rp.nombreReceta,
+                    value: rp.rating
+                  }))}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
           {/* GRÁFICO 1 - Recetas por país (BARRAS VERTICALES) */}
-          <Grid size={{xs:12, md:6}}>
+            <Grid size={{xs:12, md:12}}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -137,10 +157,13 @@ export default function EstadisticasPage() {
                 />
               </CardContent>
             </Card>
+            </Grid>
+
           </Grid>
 
           {/* GRÁFICO 2 - Recetas por categoría (DONUT) */}
-          <Grid size={{xs:12, md:6}}>
+          
+          <Grid size={{xs:12, md:6}} >
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -157,24 +180,8 @@ export default function EstadisticasPage() {
               </CardContent>
             </Card>
           </Grid>
-
-          {/* GRÁFICO  - Recetas populares */}
-          <Grid size={{xs:12, md:6}}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Recetas Populares (Top 3)
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-
-                <RecetasPopularesGraph
-                  data={recetasPopulares.map((rp) => ({
-                    label: rp.nombreReceta,
-                  }))}
-                />
-              </CardContent>
-            </Card>
           </Grid>
+
 
           {/* GRÁFICO 3 - Ingredientes más usados (BARRAS HORIZONTALES) */}
           <Grid size={{xs:12}}>

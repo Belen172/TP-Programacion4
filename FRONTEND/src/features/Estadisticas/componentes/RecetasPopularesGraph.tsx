@@ -2,14 +2,15 @@ import { Chart, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "
 import { List, ListItem, ListItemText } from "@mui/material";
 Chart.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-export function RecetasPopularesGraph({ data }: { data: { label: string }[];}) {
+export function RecetasPopularesGraph({ data }: { data: { label: string, value: number }[];}) {
   return (
     <List>
       {data.map((item, index) => (
-        <ListItem key={index}>
-          <ListItemText primary={item.label} />
+        <ListItem key={index} >
+          <ListItemText primary={index+1 + " - "  + item.label} sx={{ width: '50px' }} />
+          <ListItemText primary={"Vistas: "  + item.value}  sx={{ width: '10px' }}/>
         </ListItem>
       ))}
     </List>
   );
-}
+} 
