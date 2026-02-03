@@ -209,7 +209,7 @@ export default function RecetasBuscarPage() {
               </CardContent>
 
               <CardActions>
-                <Button size="small" onClick={() => {toggleExpand(receta.id_receta), actualizarRatingUI(receta.id_receta)}}>
+                <Button size="small" onClick={() => {recetaExpandida === null ?  (toggleExpand(receta.id_receta), actualizarRatingUI(receta.id_receta)) : toggleExpand(receta.id_receta) }}>
                   {recetaExpandida === receta.id_receta
                     ? "Ocultar detalles"
                     : "Ver detalles"}
