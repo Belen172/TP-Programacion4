@@ -3,12 +3,12 @@ import type { FormEvent } from "react";
 import { RecetaService } from "../services/RecetaService";
 import type { RecetaCrearDto } from "../types/RecetaTypes";
 import { TextField, Button, Box, Grid, Typography, Stack, Divider } from "@mui/material";
-import { SelectCategoria } from "src/shared/componentes/SelectCategoria";
-import { SelectPais } from "src/shared/componentes/SelectPais";
-import { ListaPasos } from "src/shared/componentes/ListaPasos";
+import { SelectCategoria } from "src/features/Receta/componentes/SelectCategoria";
+import { SelectPais } from "src/features/Receta/componentes/SelectPais";
+import { ListaPasos } from "src/features/Receta/componentes/ListaPasos";
 import { useNavigate } from "react-router";
-import { InputImagen } from "src/shared/componentes/InputImagen";
-import { SelectIngredientesConCantidad } from "src/shared/componentes/SelectIngredientesConCantidad";
+import { InputImagen } from "src/features/Receta/componentes/InputImagen";
+import { SelectIngredientesConCantidad } from "src/features/Receta/componentes/SelectIngredientesConCantidad";
 
 const estadoInicial: RecetaCrearDto = {
   nombre: "",

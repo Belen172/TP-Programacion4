@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {Box,Stack,TextField,Typography,IconButton,Button,Autocomplete} from "@mui/material";
 import { IngredienteService } from "src/features/Ingrediente/services/IngredienteService";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material"; 
 
 interface IngredienteCantidad {
   id_ingrediente: number;
-  cantidad: number;
+  cantidad: string | null;
 }
 
 interface Props {
@@ -25,7 +25,7 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
   }, []);
 
   const handleAgregarFila = () => {
-    onChange([...value, { id_ingrediente: 0, cantidad: 0 }]);
+    onChange([...value, { id_ingrediente: 0, cantidad: null}]);
   };
 
   const handleEliminarFila = (index: number) => {
@@ -35,7 +35,7 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
   const handleCambiarValor = (
     index: number,
     campo: keyof IngredienteCantidad,
-    nuevoValor: any
+    nuevoValor: number | null | string
   ) => {
     const nuevos = value.map((item, i) =>
       i === index ? { ...item, [campo]: nuevoValor } : item
@@ -89,12 +89,15 @@ export function SelectIngredientesConCantidad({ value, onChange }: Props) {
               <Box flex={1}>
               <TextField
                 label="Cantidad"
-                type="number"
+                type="text"
                 variant="outlined"
                 fullWidth
-                value={item.cantidad}
-                onChange={(e) =>
-                  handleCambiarValor(index, "cantidad", Number(e.target.value))
+                value={item.cantidad ?? ""}
+                onChange={(e) =>{
+                    const v = e.target.value;
+                    if (!/^\d*\.?\d{0,2}$/.test(v)) return;
+                    handleCambiarValor(index, "cantidad", v);
+                  }
                 }
               />
               </Box>

@@ -3,11 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Button, Grid, TextField, Typography, Stack, Divider } from "@mui/material";
 import { RecetaService } from "../services/RecetaService";
 import type { RecetaActualizarDto } from "../types/RecetaTypes";
-import { SelectPais } from "src/shared/componentes/SelectPais";
-import { SelectCategoria } from "src/shared/componentes/SelectCategoria";
-import { ListaPasos } from "src/shared/componentes/ListaPasos";
-import { InputImagen } from "src/shared/componentes/InputImagen";
-import { SelectIngredientesConCantidad } from "src/shared/componentes/SelectIngredientesConCantidad";
+import { SelectPais } from "src/features/Receta/componentes/SelectPais";
+import { SelectCategoria } from "src/features/Receta/componentes/SelectCategoria";
+import { ListaPasos } from "src/features/Receta/componentes/ListaPasos";
+import { InputImagen } from "src/features/Receta/componentes/InputImagen";
+import { SelectIngredientesConCantidad } from "src/features/Receta/componentes/SelectIngredientesConCantidad";
 
 export default function RecetaEditarPage() {
   const [searchParams] = useSearchParams();
