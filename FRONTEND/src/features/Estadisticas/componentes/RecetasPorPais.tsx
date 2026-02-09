@@ -14,6 +14,18 @@ export function RecetasPorPais({ data }: { data: { label: string; value: number 
     ],
   };
 
-  return <Bar data={chartData} />;
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0
+        }
+      }
+    }
+  };
+
+  return <Bar data={chartData} options={options} />;
 }
 

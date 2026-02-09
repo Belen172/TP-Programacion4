@@ -14,7 +14,17 @@ export function IngredientesMasUsados({ data }: { data: { label: string; value: 
     ],
   };
 
-  const options = { indexAxis: "y" as const };
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0
+        }
+      }
+    }
+  };
 
   return <Bar data={chartData} options={options} />;
 }
